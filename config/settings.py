@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'location',
     'wildlife',
+    'veterinary',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-EC'
+LANGUAGE_CODE = 'es-EC'
 
 TIME_ZONE = 'UTC'
 
