@@ -21,6 +21,7 @@ from wildlife.views import *
 
 router = routers.DefaultRouter()
 router.register(r'kinds', KindViewSet)
+router.register(r'breeds', BreedViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

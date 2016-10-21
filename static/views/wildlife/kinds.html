@@ -14,13 +14,15 @@
       <table datatable="ng" class="table table-striped">
         <thead>
           <tr>
+            <th>Código</th>
             <th>Nombre</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="kind in kinds">
-            <td name="name" class="col-xs-10">{{ kind.name }}</td>
+            <td name="code" class="col-xs-3">{{ kind.code }}</td>
+            <td name="name" class="col-xs-7">{{ kind.name }}</td>
             <td name="actions" id="{{ kind.id }}" class="col-xs-2">
               <button ng-click="edit(kind)" class="btn btn-xs btn-default">
                 <span class="fa fa-pencil"></span>
@@ -49,12 +51,12 @@
         <div class="form-group" ng-class="{'has-error': (form.$submitted || form.code.$touched) && form.code.$invalid}">
           <label for="code">Código</label>
           <input id="code" name="code" ng-model="kind.code" type="text" class="form-control" placeholder="Código de la especie" required>
-          <span ng-if="(form.$submitted || form.code.$touched) && form.code.$invalid" class="help-block">El nombre es obligatorio</span>
+          <span ng-if="(form.$submitted || form.code.$touched) && form.code.$invalid" class="help-block">El código es obligatorio</span>
         </div>
 
         <div class="form-group" ng-class="{'has-error': (form.$submitted || form.name.$touched) && form.name.$invalid}">
           <label for="name">Nombre</label>
-          <input id="name" name="name" ng-model="kind.name" type="text" class="form-control" placeholder="Nombre del tipo" required>
+          <input id="name" name="name" ng-model="kind.name" type="text" class="form-control" placeholder="Nombre de la especie" required>
           <span ng-if="(form.$submitted || form.name.$touched) && form.name.$invalid" class="help-block">El nombre es obligatorio</span>
         </div>
       </form>

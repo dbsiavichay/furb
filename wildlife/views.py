@@ -5,3 +5,7 @@ from .serializers import *
 class KindViewSet(viewsets.ModelViewSet):
 	queryset = Kind.objects.all()
 	serializer_class = KindSerializer
+
+class BreedViewSet(viewsets.ModelViewSet):
+	queryset = Breed.objects.all()
+	serializer_class = BreedSerializer

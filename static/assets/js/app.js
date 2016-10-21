@@ -10,6 +10,10 @@
       .when('/especies', {
         templateUrl: 'static/views/wildlife/kinds.html',
         controller: 'KindController'
+      })
+      .when('/razas', {
+        templateUrl: 'static/views/wildlife/breeds.html',
+        controller: 'BreedController'
       });
 
     $resourceProvider.defaults.stripTrailingSlashes = false;
