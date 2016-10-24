@@ -1,0 +1,84 @@
+<h3><i class="fa fa-angle-right"></i> Enfermedades</h3>
+<div ng-hide="disease" class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Listado
+        </h4>
+        <a ng-click="edit()" class="btn btn-sm btn-primary pull-right col-xs-2">
+          <i class="fa fa-plus-circle"></i> Agregar
+        </a>
+      </div>
+      <table datatable="ng" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Especies</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="disease in diseases">
+            <td name="name" class="col-xs-3">{{ disease.name }}</td>
+            <td name="kind" class="col-xs-7">{{ disease.str_kinds }}</td>
+            <td name="actions" class="col-xs-2">
+              <button ng-click="edit(disease)" class="btn btn-xs btn-default">
+                <span class="fa fa-pencil"></span>
+              </button>
+              <button ng-click="remove(disease)" class="btn btn-xs btn-default">
+                <span class="fa fa-remove"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div ng-show="disease" class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Datos de enfermedad
+        </h4>
+      </div>
+      <form name="form" novalidate>
+
+        <div class="form-group" ng-class="{'has-error': (form.$submitted || form.name.$touched) && form.name.$invalid}">
+          <label for="name">Name</label>
+          <input id="name" name="name" ng-model="disease.name" type="text" class="form-control" placeholder="Nombre de la enfermedad" required>
+          <span ng-if="(form.$submitted || form.name.$touched) && form.name.$invalid" class="help-block">El nombre es requerido</span>
+        </div>
+
+        <div class="form-group" ng-class="{'has-error': flagKinds}">
+          <label for="kind">Especies</label>
+          <div class="checkbox">
+            <label ng-repeat="kind in kinds">
+              <input type="checkbox" ng-checked="disease.kinds.indexOf(kind.id) > -1"
+                ng-click="toggleKindSelection(kind.id)"> {{ kind.name }}
+            </label>
+          </div>
+          <span ng-if="flagKinds" class="help-block">Debe elegir al menos una especie</span>
+        </div>
+      </form>
+
+      <button ng-hide="disease.id" ng-click="create()" class="btn btn-primary">
+        <i class="fa fa-check"></i> Guardar
+      </button>
+      <button ng-show="disease.id" ng-click="update()" class="btn btn-primary">
+        <i class="fa fa-check"></i> Guardar
+      </button>
+      <button ng-show="disease.id" ng-click="delete()" class="btn btn-danger">
+        <i class="fa fa-trash"></i> Eliminar
+      </button>
+      <button ng-click="reset()" class="btn btn-link">Regresar</button>
+    </div>
+  </div>
+</div>
+
+<div ng-include="'static/partials/modal-delete.html'"></div>

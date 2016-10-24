@@ -6,6 +6,9 @@ class Kind(models.Model):
 	code = models.CharField(max_length=2)
 	name = models.CharField(max_length=128)
 
+	def __unicode__(self):
+		return self.name
+
 class Breed(models.Model):
 	name = models.CharField(max_length=128)
 	kind = models.ForeignKey(Kind)
@@ -20,9 +23,9 @@ class Animal(models.Model):
 	weight = models.DecimalField(max_digits=6, decimal_places=2)
 	is_sterilized = models.BooleanField()
 	contraindications = models.TextField()
-	breed = models.ForeignKey(Breed)
 	owner = models.CharField(max_length=15)
 	parish = models.CharField(max_length=6)
+	breed = models.ForeignKey(Breed)
 
 class AnimalVaccine(models.Model):
 	animal = models.ForeignKey(Animal)

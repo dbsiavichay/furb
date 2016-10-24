@@ -18,10 +18,14 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from rest_framework import routers
 from wildlife.views import *
+from veterinary.views import *
 
 router = routers.DefaultRouter()
 router.register(r'kinds', KindViewSet)
 router.register(r'breeds', BreedViewSet)
+
+router.register(r'vaccines', VaccineViewSet)
+router.register(r'diseases', DiseaseViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
