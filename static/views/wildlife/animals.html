@@ -1,0 +1,120 @@
+<h3><i class="fa fa-angle-right"></i> Animales</h3>
+
+<div class="progress">
+  <div class="progress-bar" style="width: 66.66%;"></div>
+</div>
+
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Datos generales
+        </h4>
+      </div>
+      <form name="form" novalidate>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.name.$touched) && form.name.$invalid}">
+              <label for="name">Nombre</label>
+              <input id="name" name="name" ng-model="animal.name" type="text" class="form-control" placeholder="Nombre del animal" required>
+              <span ng-if="(form.$submitted || form.name.$touched) && form.name.$invalid" class="help-block">El nombre es requerido</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.kind.$touched) && form.kind.$invalid}">
+              <label for="kind">Especie</label>
+              <select id="kind" name="kind" ng-model="animal.kind" class="form-control"
+                  ng-options="kind.id as kind.name for kind in kinds" ng-change="loadBreeds()" required>
+                  <option value="">--- Seleccionar ---</option>
+              </select>
+              <span ng-if="(form.$submitted || form.kind.$touched) && form.kind.$invalid" class="help-block">Debe seleccionar una especie</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.breed.$touched) && form.breed.$invalid}">
+              <label for="breed">Raza</label>
+              <select id="breed" name="breed" ng-model="animal.breed" class="form-control"
+                ng-options="breed.id as breed.name for breed in breeds" required>
+                <option value="">--- Seleccionar ---</option>
+              </select>
+              <span ng-if="(form.$submitted || form.breed.$touched) && form.breed.$invalid" class="help-block">Debe seleccionar una raza</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.parish.$touched) && form.parish.$invalid}">
+              <label for="parish">Residencia</label>
+              <select id="parish" name="parish" ng-model="animal.parish" class="form-control"
+              ng-options="parish.code as parish.name for parish in parishes" required>
+                <option value="">--- Seleccionar ---</option>
+              </select>
+              <span ng-if="(form.$submitted || form.parish.$touched) && form.parish.$invalid" class="help-block">Debe seleccionar una parroquia</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.birthday.$touched) && form.birthday.$invalid}">
+              <label for="birthday">Fecha de nacimiento</label>
+              <input id="birthday" name="birthday" ng-model="animal.birthday" type="date" format="yyyy-mm-dd" class="form-control"
+              ng-blur="processAge()" placeholder="Fecha de nacimiento del animal" required>
+              <span ng-if="(form.$submitted || form.birthday.$touched) && form.birthday.$invalid" class="help-block">El nombre es requerido</span>
+            </div>
+
+            <div class="form-group">
+              <label for="age">Edad</label>
+              <input id="age" name="age" ng-model="age" type="text" class="form-control" ng-disabled="true">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.primary_color.$touched) && form.primary_color.$invalid}">
+              <label for="primary_color">Color primario</label>
+              <input id="primary_color" name="primary_color" ng-model="animal.primary_color" type="text" class="form-control" placeholder="Color primario del animal" required>
+              <span ng-if="(form.$submitted || form.primary_color.$touched) && form.primary_color.$invalid" class="help-block">El color es requerido</span>
+            </div>
+
+            <div class="form-group">
+              <label for="secondary_color">Color secundario</label>
+              <input id="secondary_color" name="secondary_color" ng-model="animal.secondary_color" type="text" class="form-control" placeholder="Color secundario del animal">
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.gender.$touched) && form.gender.$invalid}">
+              <label for="gender">Sexo</label>
+              <select id="gender" name="gender" ng-model="animal.gender" class="form-control" required>
+                <option value="">--- Seleccionar ---</option>
+                <option value="0">Hembra</option>
+                <option value="1">Macho</option>
+              </select>
+              <span ng-if="(form.$submitted || form.gender.$touched) && form.gender.$invalid" class="help-block">El tipo es requerido</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.weight.$touched) && form.weight.$invalid}">
+              <label for="weight">Peso</label>
+              <input id="weight" name="weight" ng-model="animal.weight" type="number" min="0" class="form-control" placeholder="Peso en kilogramos del animal" required>
+              <span ng-if="(form.$submitted || form.weight.$touched) && form.weight.$invalid" class="help-block">El peso es requerido</span>
+            </div>
+
+            <div class="form-group">
+              <label for="is_sterilized">Esta esterilizado?</label>
+              <div class="checkbox">
+                <label>
+                  <input id="is_sterilized" name="is_sterilized" type="checkbox">
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contraindications">Contraindicaciones</label>
+              <textarea id="contraindications" name="contraindications" ng-model="animal.contraindications" class="form-control" placeholder="Observaciones necesarias">
+              </textarea>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<button ng-hide="animal.id" ng-click="create()" class="btn btn-primary">
+  <i class="fa fa-check"></i> Guardar
+</button>
+<button ng-click="reset()" class="btn btn-link">Regresar</button>
+
+<div ng-include="'static/partials/modal-delete.html'"></div>

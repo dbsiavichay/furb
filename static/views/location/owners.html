@@ -1,0 +1,81 @@
+<h3><i class="fa fa-angle-right"></i> Animales</h3>
+
+<div class="progress">
+  <div class="progress-bar" style="width: 33.33%;"></div>
+</div>
+
+
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Datos del propietario
+        </h4>
+      </div>
+      <div ng-show="error" class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error!</strong> {{ errorMessage }}
+      </div>
+      <form name="form" novalidate>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.charter.$touched) && form.charter.$invalid}">
+              <label for="charter">Cédula</label>
+              <input id="charter" name="charter" type="text" class="form-control" ng-model="owner.charter"
+              ng-blur="search()" ng-keyup="search($event)" placeholder="Cédula del propietario" required>
+              <span ng-if="(form.$submitted || form.charter.$touched) && form.charter.$invalid" class="help-block">Este campo es requerido</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.name.$touched) && form.name.$invalid}">
+              <label for="name">Nombre completo</label>
+              <input id="name" name="name" ng-model="owner.name" type="text" class="form-control" placeholder="Nombre del propietario"
+              ng-disabled="true" required>
+              <span ng-if="(form.$submitted || form.name.$touched) && form.name.$invalid" class="help-block">Este campo es requerido</span>
+            </div>
+            <div class="form-group">
+              <label for="cellphone">Número de celular</label>
+              <input id="cellphone" name="cellphone" ng-model="owner.cellphone" type="text" class="form-control"
+              placeholder="Celular de contacto">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.parish.$touched) && form.parish.$invalid}">
+              <label for="parish">Parroquia de residencia</label>
+              <select id="parish" name="parish" ng-model="owner.parish" class="form-control"
+              ng-options="parish.code as parish.name for parish in parishes" required>
+                <option value="">--- Seleccionar ---</option>
+              </select>
+              <span ng-if="(form.$submitted || form.parish.$touched) && form.parish.$invalid" class="help-block">Este campo es requerido</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.neighborhood.$touched) && form.neighborhood.$invalid}">
+              <label for="neighborhood">Barrio/sector</label>
+              <input id="neighborhood" name="neighborhood" ng-model="owner.neighborhood" type="text" class="form-control"
+              placeholder="Barrio o sector de residencia" required>
+              <span ng-if="(form.$submitted || form.neighborhood.$touched) && form.neighborhood.$invalid" class="help-block">Este campo es requerido</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': (form.$submitted || form.address.$touched) && form.address.$invalid}">
+              <label for="address">Dirección</label>
+              <input id="address" name="address" ng-model="owner.address" type="text" class="form-control"
+              placeholder="Dirección de residencia" required>
+              <span ng-if="(form.$submitted || form.address.$touched) && form.address.$invalid" class="help-block">Este campo es requerido</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<button ng-show="state=='create' || state=='read'" ng-disabled="state!='create'" ng-click="create()" class="btn btn-primary">
+  <i class="fa fa-check"></i> Continuar
+</button>
+<button ng-show="state=='update'" ng-click="update()" class="btn btn-primary">
+  <i class="fa fa-check"></i> Continuar
+</button>
+
+<div ng-include="'static/partials/modal-delete.html'"></div>

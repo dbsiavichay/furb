@@ -1,6 +1,7 @@
 (function () {
   angular.module('wildlife.controllers', [
-    'wildlife.services'
+    'wildlife.services',
+    'location.services'
   ])
 
   .controller('KindController', function ($scope, Kind) {
@@ -115,6 +116,105 @@
       for(var i in $scope.breeds) {
         var t = $scope.breeds[i];
         if(t.id === breed.id) return i;
+      }
+    }
+  })
+  .controller('AnimalController', function ($scope, $routeParams, Kind, Breed, Animal, Parish) {
+    $scope.parishes = Parish.query();
+    $scope.kinds = Kind.query();
+    $scope.breeds = [];
+    $scope.animal = new Animal()
+    $scope.animal.owner = $routeParams.owner;
+    $scope.age = '';
+
+    $scope.edit = function (animal) {
+      $scope.form.$setPristine();
+      $scope.form.$setUntouched();
+      $scope.animal = angular.copy(animal) || new Animal();
+    }
+
+    $scope.remove = function (animal) {
+      $scope.animal = animal;
+      $('#deleteModal').modal('show');
+    }
+
+    $scope.reset = function () {
+      $scope.animal = null;
+    }
+
+    $scope.create = function () {
+      if(!$scope.form.$valid) return;
+
+      $scope.animal
+        .$save(function (response) {
+          console.log(response);
+          //$scope.animals.push($scope.animal);
+          //$scope.reset();
+        });
+    }
+
+    $scope.update = function () {
+      if(!$scope.form.$valid) return;
+
+      $scope.animal
+        .$update(function (response) {
+          var index = getIndex($scope.animal);
+          $scope.animals[index] = angular.copy(response);
+          $scope.reset();
+        });
+    }
+
+    $scope.delete = function () {
+      $scope.animal
+        .$remove(function () {
+          var index = getIndex($scope.animal);
+          $scope.animals.splice(index, 1);
+          $scope.reset();
+          $('#deleteModal').modal('hide');
+        });
+    }
+
+    $scope.loadBreeds = function () {
+      $scope.breeds = Breed.query({'kind': $scope.animal.kind})
+    }
+
+    $scope.processAge = function () {
+      if(!$scope.form.birthday.$valid) return;
+      var age = ''
+
+      var seconds = Math.floor((new Date() - $scope.animal.birthday) / 1000);
+
+      var interval = Math.floor(seconds / 31536000);
+
+      if (interval > 1) age = age + interval + ' años ';
+      else if ((interval == 1)) age = age + interval + ' año ';
+
+
+      seconds = seconds % 31536000;
+      interval = Math.floor(seconds / 2592000);
+      if (interval > 1) age = age + interval + ' meses ';
+      else if (interval == 1) age = age + interval + ' mes ';
+
+      seconds = seconds % 2592000;
+      interval = Math.floor(seconds / 86400);
+      if (interval > 1) age = age + interval + ' días ';
+      else if (interval == 1) age = age + interval + ' día ';
+
+      $scope.age = age;
+    }
+
+    processCode = function () {
+      var a = $scope.animal;
+      var code = a.parish;
+      code += a.gender;
+      code += a.kind>9?a.kind:'0'+a.kind;
+      return code;
+    }
+
+    getIndex = function (animal) {
+      for(var i in $scope.animals) {
+        var t = $scope.animals[i];
+        if(t.id === animal.id) return i;
       }
     }
   });

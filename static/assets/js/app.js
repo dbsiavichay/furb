@@ -3,6 +3,7 @@
     'ngRoute',
     'wildlife.controllers',
     'veterinary.controllers',
+    'location.controllers',
     'datatables'
   ]);
 
@@ -16,7 +17,11 @@
         templateUrl: 'static/views/wildlife/breeds.html',
         controller: 'BreedController'
       })
-      .when('/animales', {
+      .when('/animales-propietario', {
+        templateUrl: 'static/views/location/owners.html',
+        controller: 'OwnerController'
+      })
+      .when('/animales/:owner', {
         templateUrl: 'static/views/wildlife/animals.html',
         controller: 'AnimalController'
       })

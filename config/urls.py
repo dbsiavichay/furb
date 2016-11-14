@@ -19,16 +19,22 @@ from django.views.generic import TemplateView
 from rest_framework import routers
 from wildlife.views import *
 from veterinary.views import *
+from location.views import *
 
 router = routers.DefaultRouter()
 router.register(r'kinds', KindViewSet)
 router.register(r'breeds', BreedViewSet)
+router.register(r'animals', AnimalViewSet)
 
 router.register(r'vaccines', VaccineViewSet)
 router.register(r'diseases', DiseaseViewSet)
 
+router.register(r'parishes', ParishViewSet)
+router.register(r'owners', OwnerViewSet)
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(router.urls)),
-    url(r'^', TemplateView.as_view(template_name='home.html')),
+    url(r'^api/civil-record/(?P<charter>\d+)/$', search_charter),
+    url(r'^$', TemplateView.as_view(template_name='home.html')),
 ]

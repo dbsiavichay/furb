@@ -14,3 +14,7 @@ class BreedSerializer(serializers.ModelSerializer):
 
     def get_kind_name(self, obj):
         return obj.kind.name
+
+class AnimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Animal

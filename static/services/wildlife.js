@@ -16,5 +16,12 @@
     },{
       update: {method: 'PUT'}
     });
+  })
+  .factory('Animal', function ($resource) {
+    return $resource('/api/animals/:id/', {
+      id: '@id'
+    },{
+      update: {method: 'PUT'}
+    });
   });
 })();
