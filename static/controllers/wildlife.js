@@ -119,7 +119,7 @@
       }
     }
   })
-  .controller('AnimalController', function ($scope, $routeParams, Kind, Breed, Animal, Parish) {
+  .controller('AnimalController', function ($scope, $routeParams, $location, Kind, Breed, Animal, Parish) {
     $scope.parishes = Parish.query();
     $scope.kinds = Kind.query();
     $scope.breeds = [];
@@ -147,9 +147,7 @@
 
       $scope.animal
         .$save(function (response) {
-          console.log(response);
-          //$scope.animals.push($scope.animal);
-          //$scope.reset();
+          $location.path('/animales-reporte/'+response.id)
         });
     }
 
@@ -217,5 +215,8 @@
         if(t.id === animal.id) return i;
       }
     }
+  })
+  .controller('AnimalReportController', function ($scope, $routeParams) {
+    $scope.url = '/report/ficha/?animal=' + $routeParams.id        
   });
 })();

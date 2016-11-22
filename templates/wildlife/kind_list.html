@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
+<h3><i class="fa fa-angle-right"></i> Especies</h3>
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Listado
+        </h4>
+        <a href="/kind/add/" class="btn btn-sm btn-primary pull-right col-xs-2">
+          <i class="fa fa-plus-circle"></i> Agregar
+        </a>
+      </div>
+
+      <div class="card">
+        <figure>
+          <img src="{% static 'assets/icons/cat.png' %}"/>
+        </figure>
+        <div class="card-info">
+          <p>#01</p>
+          <h2>Felino</h2>
+        </div>
+      </div>
+
+      {% for kind in object_list %}
+      <p>
+        {{ kind.name }}
+      </p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock%}

@@ -25,6 +25,10 @@
         templateUrl: 'static/views/wildlife/animals.html',
         controller: 'AnimalController'
       })
+      .when('/animales-reporte/:id', {
+        templateUrl: 'static/views/wildlife/printficha.html',
+        controller: 'AnimalReportController'
+      })
       .when('/vacunas', {
         templateUrl: 'static/views/veterinary/vaccines.html',
         controller: 'VaccineController'

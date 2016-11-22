@@ -36,5 +36,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(router.urls)),
     url(r'^api/civil-record/(?P<charter>\d+)/$', search_charter),
-    url(r'^$', TemplateView.as_view(template_name='home.html')),
+    url(r'^report/ficha/$', create_animal_report),
+    url(r'^kind/$', KindListView.as_view()),
 ]
