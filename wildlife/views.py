@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.conf import settings
+from os import listdir
+from os.path import isfile, join
 from django.views.generic import CreateView, ListView
 from django.http import HttpResponse
 from rest_framework import viewsets
@@ -21,7 +24,17 @@ class KindListView(ListView):
 	model = Kind
 
 class KindCreateView(CreateView):
-	pass
+	model = Kind
+	fields = '__all__'
+	success_url = '/kind/'
+
+	def get_context_data(self, **kwargs):
+		path = join(settings.BASE_DIR, 'static/assets/icons/')
+		icons = [f for f in listdir(path) if isfile(join(path, f))]
+
+		context = super(KindCreateView, self).get_context_data(**kwargs)
+		context['icons'] = icons
+		return context
 
 class KindViewSet(viewsets.ModelViewSet):
 	queryset = Kind.objects.all()

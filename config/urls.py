@@ -38,4 +38,5 @@ urlpatterns = [
     url(r'^api/civil-record/(?P<charter>\d+)/$', search_charter),
     url(r'^report/ficha/$', create_animal_report),
     url(r'^kind/$', KindListView.as_view()),
+    url(r'^kind/add/$', KindCreateView.as_view()),
 ]

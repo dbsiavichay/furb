@@ -11,31 +11,50 @@
       <div class="content-panel-header">
         <h4>
           <i class="fa fa-angle-right"></i>
-          Listado
+          Datos de especie
         </h4>
-        <a href="/kind/add/" class="btn btn-sm btn-primary pull-right col-xs-2">
-          <i class="fa fa-plus-circle"></i> Agregar
-        </a>
       </div>
-      {% for kind in object_list %}
-      <div class="card">
-        <figure>
-          <img src="{% static 'assets/icons/cat.png' %}"/>
-        </figure>
-        <div class="card-actions">
-          <div class="actions">
-            <a href="#" class="action"><span class="fa fa-star"></span></a>
-            <a href="#" class="action"><span class="fa fa-pencil"></span></a>
-            <a href="#" class="action"><span class="fa fa-close"></span></a>
+      <form id="form" method="POST" action="/kind/add/" novalidate>
+        <div class="form-group {% if form.code.errors %} has-error {% endif %}">
+          <label class="control-label" for="code">Código</label>
+          <input id="code" name="code" type="text" class="form-control" placeholder="Código de la especie"
+          {% if form.code.value %} value="{{ form.code.value }}" {% endif %}>
+          {% for error in form.code.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="form-group {% if form.name.errors %} has-error {% endif %}">
+          <label class="control-label" for="name">Nombre</label>
+          <input id="name" name="name" type="text" class="form-control" placeholder="Nombre de la especie"
+          {% if form.name.value %} value="{{ form.name.value }}" {% endif %}>
+          {% for error in form.name.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="form-group {% if form.image.errors %} has-error {% endif %}">
+          <label class="control-label" for="name">Selecciona una imagen</label>
+          <div>
+            {% for icon in icons %}
+            <figure class="kind-icon {% if form.image.value == icon %} selected {% endif %}" icon="{{ icon }}">
+              <img width="50" src="{% static 'assets/icons/' %}{{ icon }}" alt="" />
+            </figure>
+            {% endfor %}
           </div>
+          {% for error in form.image.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
         </div>
-        <div class="card-info">
-          <strong>#{{ kind.code }}</strong>
-          <h2>{{ kind.name }}</h2>
-        </div>
-      </div>
-      {% endfor %}
+      </form>
+
+      <button id="btnSubmit" value="Guardar" class="btn btn-primary">
+        <i class="fa fa-check"></i> Guardar
+      </button>
+      <a href="/kind/" class="btn btn-link">Regresar</button>
+
     </div>
   </div>
 </div>
+
 {% endblock%}

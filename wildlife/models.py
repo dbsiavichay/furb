@@ -5,7 +5,7 @@ from django.db import models
 class Kind(models.Model):
 	code = models.CharField(max_length=2)
 	name = models.CharField(max_length=128)
-	image = models.CharField(max_length=100, default='no_img.png')
+	image = models.CharField(max_length=100)
 
 	def __unicode__(self):
 		return self.name
