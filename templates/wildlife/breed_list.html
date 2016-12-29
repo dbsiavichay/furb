@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+
 {% block content %}
 {% load staticfiles %}
-<h3><i class="fa fa-angle-right"></i> Especies</h3>
+<h3><i class="fa fa-angle-right"></i> Razas</h3>
 <div class="row mt">
   <div class="col-lg-12">
     <div class="content-panel">
@@ -10,30 +11,29 @@
           <i class="fa fa-angle-right"></i>
           Listado
         </h4>
-        <a href="/kind/add/" class="btn btn-sm btn-primary pull-right col-xs-2">
+        <a href="/breed/add/" class="btn btn-sm btn-primary pull-right col-xs-2">
           <i class="fa fa-plus-circle"></i> Agregar
         </a>
       </div>
+      
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Código</th>
+            <th>Especie</th>
             <th>Nombre</th>
-            <th>Icono</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {% for kind in object_list %}
+          {% for breed in object_list %}
           <tr>
-            <td name="code" class="col-xs-3">#{{ kind.code }}</td>
-            <td name="name" class="col-xs-5">{{ kind.name | upper}}</td>
-            <td name="icon" class="col-xs-2"><img style="height: 20px" src="{% static 'assets/icons/' %}{{ kind.image }}"></td>
+            <td name="kind" class="col-xs-4">{{ breed.kind.name | upper }}</td>
+            <td name="name" class="col-xs-6">{{ breed.name | upper }}</td>
             <td class="col-xs-2">
-              <a href="/kind/{{kind.id}}/update" class="btn btn-xs btn-default">
+              <a href="/breed/{{breed.id}}/update" class="btn btn-xs btn-default">
                 <span class="fa fa-pencil"></span>
               </a>
-              <a href="/kind/{{kind.id}}/delete" class="btn btn-xs btn-default">
+              <a href="/breed/{{breed.id}}/delete" class="btn btn-xs btn-default">
                 <span class="fa fa-remove"></span>
               </a>
             </td>
@@ -41,6 +41,7 @@
           {% endfor %}
         </tbody>
       </table>
+      
     </div>
   </div>
 </div>

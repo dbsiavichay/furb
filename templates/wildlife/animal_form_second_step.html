@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
+<h3><i class="fa fa-angle-right"></i> Animales</h3>
+
+<div class="wizard">
+    <a><span class="badge">1</span> Datos del propietario</a>
+    <a class="current"><span class="badge">2</span> Datos generales</a>
+    <a><span class="badge">3</span> Finalizar e imprimir</a>
+</div>
+
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Datos generales
+        </h4>
+      </div>
+      {% load widget_tweaks %}
+      <form action="" method="POST" class="row" novalidate>
+      {% csrf_token %}
+        <input type="hidden" name="owner" value="{{ owner }}">
+        <div class="col-md-6 form-group {% if form.name.errors %} has-error {% endif %}">
+          <label for="id_name">Nombre</label>
+          {{ form.name|add_class:"form-control"|attr:"placeholder:Nombre del animal" }}
+          {% for error in form.name.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="col-md-6 form-group">
+          <label for="kind">Especie</label>
+          <select id="kind" name="kind" class="form-control" required>
+              <option value="">---------</option>
+              {% for kind in kinds %}
+              <option value="{{ kind.id }}">{{ kind.name }}</option>
+              {% endfor %}
+          </select>              
+        </div>
+        <div class="col-md-6 form-group {% if form.breed.errors %} has-error {% endif %}">
+          <label for="id_breed">Raza</label>
+          <select id="id_breed" name="breed" class="form-control" required>
+            <option value="">---------</option>
+          </select>
+          {% for error in form.breed.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="col-md-6 form-group {% if form.parish.errors %} has-error {% endif %}">
+          <label for="id_parish">Parroquia de residencia</label>
+          {{ form.parish|add_class:"form-control" }}
+          {% for error in form.parish.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>            
+        <div class="col-md-6 form-group {% if form.birthday.errors %} has-error {% endif %}">
+          <label for="id_birthday">Fecha de nacimiento</label>
+          {{ form.birthday|add_class:"form-control"|attr:"type:date" }}
+          {% for error in form.birthday.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6 form-group">
+          <label for="age">Edad</label>
+          <input id="age" name="age" type="number" class="form-control" disabled>
+        </div>
+        
+        <div class="col-md-6 form-group {% if form.primary_color.errors %} has-error {% endif %}">
+          <label for="id_primary_color">Color primario</label>
+          {{ form.primary_color|add_class:"form-control"|attr:"placeholder:Color primario del animal" }}
+          {% for error in form.primary_color.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6 form-group {% if form.secondary_color.errors %} has-error {% endif %}">
+          <label for="id_secondary_color">Color secundario</label>
+          {{ form.secondary_color|add_class:"form-control"|attr:"placeholder:Color secundario del animal" }}
+          {% for error in form.secondary_color.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6 form-group {% if form.gender.errors %} has-error {% endif %}">
+          <label for="id_gender">Sexo</label>
+          {{ form.gender|add_class:"form-control" }}
+          {% for error in form.gender.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div> 
+
+        <div class="col-md-6 form-group {% if form.weight.errors %} has-error {% endif %}">
+          <label for="id_weight">Peso</label>
+          {{ form.weight|add_class:"form-control"|attr:"placeholder:Peso en kilogramos del animal" }}
+          {% for error in form.weight.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>  
+
+        <div class="col-md-6 form-group">
+          <label for="id_is_vaccinated">Esta vacunado?</label>
+          {{ form.is_vaccinated|attr:"style:display:block" }}
+        </div>                      
+
+        <div class="col-md-6 form-group">
+          <label for="id_is_sterilized">Esta esterilizado?</label>
+          {{ form.is_sterilized|attr:"style:display:block" }}
+        </div>            
+
+        <div class="col-xs-12 form-group">
+          <label for="contraindications">Contraindicaciones</label>
+          {{ form.contraindications|add_class:"form-control"|attr:"rows:5"|attr:"placeholder:Observaciones necesarias"}}
+          {% for error in form.contraindications.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="col-xs-12">
+          <button class="btn btn-primary">
+            <i class="fa fa-check"></i> Guardar
+          </button>
+          <button class="btn btn-link">Regresar</button>          
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+  {% load staticfiles %}
+  <script src="{% static 'assets/js/animal-2.js' %}"></script>
+{% endblock %}

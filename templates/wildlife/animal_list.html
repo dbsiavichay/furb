@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
+<h3><i class="fa fa-angle-right"></i> Animales</h3>
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Listado
+        </h4>
+        <a href="/animal/add/step/1/" class="btn btn-sm btn-primary pull-right col-xs-2">
+          <i class="fa fa-plus-circle"></i> Agregar
+        </a>
+      </div>
+      {% for animal in object_list %}
+      <div class="card">
+        <figure>
+          <img  src="{% static 'assets/icons/' %}{{ animal.breed.kind.image }}"/>
+        </figure>
+        <div class="card-actions">
+          <div class="actions">
+            <a href="#" class="action"><span class="fa fa-star"></span></a>
+            <a href="#" class="action"><span class="fa fa-pencil"></span></a>
+            <a href="#" class="action"><span class="fa fa-close"></span></a>
+          </div>
+        </div>
+        <div class="card-info">
+          <strong>#{{ animal.code }}</strong>
+          <h2>{{ animal.name }}</h2>
+          <span class="tag bg-primary">{{ animal.breed.kind.name }}</span>
+          <span class="tag bg-success">{% if animal.gender == 'H' %}Hembra{% else %}Macho{% endif %}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock%}

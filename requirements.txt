@@ -1,3 +1,7 @@
 Django==1.10.2
+django-widget-tweaks==1.4.1
 djangorestframework==3.4.7
+Pillow==3.4.2
 psycopg2==2.6.2
+reportlab==3.3.0
+suds==0.4

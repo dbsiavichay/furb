@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.http import JsonResponse
 from django.conf import settings
 from os import listdir
 from os.path import isfile, join
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
 from rest_framework.response import Response
 from location.models import Owner, Parish
 from .models import *
+from .forms import *
 from .serializers import *
+from django.shortcuts import render, redirect
+from django.forms import modelform_factory
+
+
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, landscape
@@ -21,7 +28,7 @@ from reportlab.lib.units import cm, mm
 from io import BytesIO
 
 class KindListView(ListView):
-	model = Kind
+	model = Kind	
 
 class KindCreateView(CreateView):
 	model = Kind
@@ -34,53 +41,133 @@ class KindCreateView(CreateView):
 
 		context = super(KindCreateView, self).get_context_data(**kwargs)
 		context['icons'] = icons
+		context['action'] = 'crear'
 		return context
 
-class KindViewSet(viewsets.ModelViewSet):
-	queryset = Kind.objects.all()
-	serializer_class = KindSerializer
+class KindUpdateView(UpdateView):
+	model = Kind
+	fields = '__all__'
+	success_url = '/kind/'
 
-class BreedViewSet(viewsets.ModelViewSet):
-	queryset = Breed.objects.all()
-	serializer_class = BreedSerializer
+	def get_context_data(self, **kwargs):
+		path = join(settings.BASE_DIR, 'static/assets/icons/')
+		icons = [f for f in listdir(path) if isfile(join(path, f))]
 
-	def get_queryset(self):
-		queryset = self.queryset
-		kind = self.request.query_params.get('kind', None)
-		if kind is not None:
-			queryset = queryset.filter(kind=kind)
-		return queryset
+		context = super(KindUpdateView, self).get_context_data(**kwargs)
+		context['icons'] = icons
+		context['action'] = 'editar'
+		return context
 
-class AnimalViewSet(viewsets.ModelViewSet):
-	queryset = Animal.objects.all()
-	serializer_class = AnimalSerializer
+class BreedListView(ListView):
+	model = Breed
 
-	def create(self, request):
-		data = {attr: request.data[attr] for attr in request.data if attr!='csrfmiddlewaretoken'}
-		parish = data['parish']
-		gender = data['gender']
-		data['breed'] = Breed.objects.get(pk=data['breed'])
-		kind_id = data.pop('kind', None)
-		kind = Kind.objects.get(pk=kind_id) if kind_id is not None else '';
-		data['code'] = parish + gender + kind.code
+	def get(self, request, *args, **kwargs):
+		if request.is_ajax():
+			kind = request.GET.get('kind', None)			
+			object_list = [{'id': obj.id, 'name': obj.name} for obj in self.model.objects.filter(kind=kind)]
+			return JsonResponse(object_list, safe=False)
+		else:
+			return super(BreedListView, self).get(request, *args, **kwargs)
 
-		ans = Animal.objects.filter(parish=parish, gender=gender, breed__kind=kind).order_by('id')[:1]
+class BreedCreateView(CreateView):
+	model = Breed
+	fields = '__all__'
+	success_url = '/breed/'
+
+	def get_context_data(self, **kwargs):
+		context = super(BreedCreateView, self).get_context_data(**kwargs)		
+		context['action'] = 'crear'
+		return context
+
+class BreedUpdateView(UpdateView):
+	model = Breed
+	fields = '__all__'
+	success_url = '/breed/'
+
+	def get_context_data(self, **kwargs):
+		path = join(settings.BASE_DIR, 'static/assets/icons/')
+		icons = [f for f in listdir(path) if isfile(join(path, f))]
+
+		context = super(BreedUpdateView, self).get_context_data(**kwargs)
+		context['icons'] = icons
+		context['action'] = 'editar'
+		return context
+
+
+class AnimalListView(ListView):
+	model = Animal
+
+
+def animal_first_step_view(request):
+	context = {}
+	OwnerForm = modelform_factory(Owner, fields = '__all__')
+
+	if request.method == 'POST':		
+		charter = request.POST.get('charter', None)
+		form = OwnerForm(request.POST)
+		if charter is not None:
+			try:
+				owner = Owner.objects.get(pk=charter)
+				form.instance = owner
+			except ObjectDoesNotExist:
+				pass
+
+		if form.is_valid():
+			form.save()
+			return redirect('/animal/add/step/2/?owner=%s' % (charter))
+	else:
+		form = OwnerForm()
+
+	context['form'] = form
+	return render(request, 'wildlife/animal_form_first_step.html', context)
+
+class AnimalSecondStepView(CreateView):
+	model = Animal
+	form_class = AnimalForm
+	success_url = '/animal/'
+	template_name = 'wildlife/animal_form_second_step.html'
+
+	def get_context_data(self, **kwargs):		
+		context = super(AnimalSecondStepView, self).get_context_data(**kwargs)
+		context['kinds'] = Kind.objects.all()
+		context['owner'] = self.request.GET.get('owner')
+		return context
+
+	def form_valid(self, form):	    
+		self.object = form.save(commit=False)
+
+		parish = Parish.objects.get(pk=self.object.parish)
+		ans = Animal.objects.filter(parish=self.object.parish, gender=self.object.gender, breed__kind=self.object.breed.kind).order_by('id')[:1]
+		code = self.object.breed.kind.code + self.object.gender + parish.gencode
 
 		if(len(ans)>0):
 			index = ''
-			strnum = ans[0].code[9:]
+			strnum = ans[0].code[4:]
 			number = int(strnum)
 			zerodigits = 6 - len(str(number))
 			for i in range(0, zerodigits):
 				index = index + '0';
 			index = index + str(number+1);
-			data['code']+=index;
+			code+=index;
 		else:
-			data['code']+='000001';
+			code+='000001';
 
-		animal = Animal.objects.create(**data)
-		serializer = AnimalSerializer(animal)
-		return Response(serializer.data)
+		self.object.code = code
+		self.object.save()
+		return super(AnimalSecondStepView, self).form_valid(form)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def create_animal_report(request):
     # Create the HttpResponse object with the appropriate PDF headers.

@@ -1,36 +1,22 @@
 from django.shortcuts import get_object_or_404
+from django.views.generic import DetailView
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from suds.client import Client
 from .models import *
-from .serializers import *
 
-class ParishViewSet(viewsets.ModelViewSet):
-	queryset = Parish.objects.using('sim').filter(canton_code='1401')
-	serializer_class = ParishSerializer
+class OwnerDetailView(DetailView):
+	model = Owner
+	pk_url_kwarg = 'charter'
 
-class OwnerViewSet(viewsets.ModelViewSet):
-	queryset = Owner.objects.using('sim').all()
-	serializer_class = OwnerSerializer
-
-	def create(self, request):
-		data = {attr: request.data[attr] for attr in request.data if attr!='csrfmiddlewaretoken'}
-		data['charter'] = data['real_charter']
-		owner = Owner.objects.using('sim').create(**data)
-		serializer = OwnerSerializer(owner)
-		return Response(serializer.data)
-
-	def update(self, request, pk=None):
-		owner = get_object_or_404(self.queryset, pk=pk)
-		owner.cellphone = request.data.get('cellphone', owner.cellphone)
-		owner.parish = request.data.get('parish', owner.parish)
-		owner.neighborhood = request.data.get('neighborhood', owner.neighborhood)
-		owner.address = request.data.get('address', owner.address)
-		owner.save()
-		serializer = OwnerSerializer(owner)
-		return Response(serializer.data)
+	def get(self, request, *args, **kwargs):		
+		self.object = self.get_object()
+		data = model_to_dict(self.object)
+		return JsonResponse(data)
 
 
 @api_view(['GET',])

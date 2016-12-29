@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+    <title>Fauna urbana</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--external css-->
+    <link href="{% static 'assets/fonts/css/font-awesome.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/style-responsive.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <section id="container" >
+      <!--header start-->
+      <header class="header black-bg">
+        <div class="sidebar-toggle-box">
+          <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+        </div>
+        <!--logo start-->
+        <a href="#" class="logo"><b>FURB</b></a>
+        <!--logo end-->        
+      </header>
+      <!--header end-->
+
+      	<!--main content start-->      
+        <section class="wrapper">        	
+        	<div id="login-page">
+			  	<div class="container"> 
+			  		{% load widget_tweaks %} 	
+				    <form class="form-login" action="" method="POST" novalidate>
+				    	{% csrf_token %}
+				        <h2 class="form-login-heading">Inicia sesión</h2>
+				        <div class="login-wrap">
+				        	{{ form.username|add_class:"form-control"|attr:"placeholder:Nombre de usuario" }}
+				        	{% for error in form.username.errors %}
+							    <span class="help-block">{{ error }}</span>
+							{% endfor %}
+				            <br>
+				            {{ form.password|add_class:"form-control"|attr:"placeholder:Contraseña" }}
+				            {% for error in form.password.errors %}
+							    <span class="help-block">{{ error }}</span>
+							{% endfor %}
+				            <label class="checkbox">
+				                <span class="pull-right">
+				                    <a data-toggle="modal" href="#myModal"> Forgot Password?</a>
+				                </span>
+				            </label>
+				            <input type="hidden" name="next" value="{{ next }}" />
+				            <button class="btn btn-theme btn-block" type="submit"><i class="fa fa-lock"></i> LOG IN</button>
+				            <hr>
+				            				            
+				            <div class="registration">
+				                ¿Aún no tienes cuenta?<br>
+				                <a class="" href="#">Registrate</a>
+				            </div>
+				        </div>
+				
+				        <!-- Modal -->
+				        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+				            <div class="modal-dialog">
+				                <div class="modal-content">
+				                    <div class="modal-header">
+				                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				                        <h4 class="modal-title">Forgot Password ?</h4>
+				                    </div>
+				                    <div class="modal-body">
+				                        <p>Enter your e-mail address below to reset your password.</p>
+				                        <input type="text" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix">
+				                    </div>
+				                    <div class="modal-footer">
+				                        <button data-dismiss="modal" class="btn btn-default" type="button">Cancel</button>
+				                        <button class="btn btn-theme" type="button">Submit</button>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+				        <!-- modal -->
+				    </form>	  	
+			  	
+			  	</div>
+			</div>
+		</section>
+      	<!--main content end-->
+    </section>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="{% static 'assets/js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.ui.touch-punch.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.dcjqaccordion.2.7.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.scrollTo.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.nicescroll.js' %}"></script>
+
+    <!--common script for all pages-->
+    <script src="{% static 'assets/js/common-scripts.js' %}"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

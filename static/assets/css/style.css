@@ -19,6 +19,15 @@ body {
     font-size:13px;
 }
 
+.uppercase {
+    text-transform: uppercase;
+}
+
+.tag {
+    padding: 1px 10px;
+    border-radius: 10px;
+}
+
 
 /*KINDS*/
 .kind-icon {
@@ -1232,7 +1241,7 @@ PANELS CONFIGURATIONS
 }
 
 .card-info {
-  padding: 0 10px;
+  padding: 5px 10px;
 }
 
 .card-info strong {

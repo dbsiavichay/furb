@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from wildlife.models import Kind
 
+# Create your models here.

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
+<h3><i class="fa fa-angle-right"></i> Animales</h3>
+
+<div class="wizard">
+    <a class="current"><span class="badge">1</span> Datos del propietario</a>
+    <a><span class="badge">2</span> Datos generales</a>
+    <a><span class="badge">3</span> Finalizar e imprimir</a>
+</div>
+
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="content-panel">
+      <div class="content-panel-header">
+        <h4>
+          <i class="fa fa-angle-right"></i>
+          Datos del propietario
+        </h4>
+      </div>
+      {% load widget_tweaks %}
+      <form action="" method="POST" class="row" novalidate>
+      {% csrf_token %}
+        <input class="form-control" type="hidden" name="real_charter" value="{% if form.charter.value %}{{ form.charter.value }}{% endif %}">
+
+        <div class="col-md-6 form-group {% if form.charter.errors %} has-error {% endif %}">
+          <label for="id_charter">Cédula</label>
+          {{ form.charter|add_class:"form-control"|attr:"placeholder:Cédula del propietario" }}                    
+          {% for error in form.charter.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+          <span id="charterInvalid" style="display: none;" class="help-block">La cédula ingresada no es correcta.</span>
+        </div>
+        <div class="col-md-6 form-group {% if form.name.errors %} has-error {% endif %}">
+          <label for="id_name">Nombre completo</label>
+          {{ form.name|add_class:"form-control"|attr:"placeholder:Nombre del propietario"|attr:"readonly" }}                    
+          {% for error in form.name.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6 form-group {% if form.telephone.errors %} has-error {% endif %}">
+          <label for="id_telephone">Teléfono</label>
+          {{ form.telephone|add_class:"form-control"|attr:"placeholder:Teléfono de contacto" }}                    
+          {% for error in form.telephone.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div> 
+
+        <div class="col-md-6 form-group {% if form.cellphone.errors %} has-error {% endif %}">
+          <label for="id_cellphone">Celular</label>
+          {{ form.cellphone|add_class:"form-control"|attr:"placeholder:Celular de contacto" }}                    
+          {% for error in form.cellphone.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-md-6 form-group {% if form.parish.errors %} has-error {% endif %}">
+          <label for="id_parish">Parroquia de residencia</label>
+          {{ form.parish|add_class:"form-control" }}
+          {% for error in form.parish.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div> 
+            
+        <div class="col-md-6 form-group {% if form.neighborhood.errors %} has-error {% endif %}">
+          <label for="id_neighborhood">Barrio/sector</label>
+          {{ form.neighborhood|add_class:"form-control"|attr:"placeholder:Barrio o sector de residencia" }}                    
+          {% for error in form.neighborhood.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-xs-12 form-group {% if form.address.errors %} has-error {% endif %}">
+          <label for="id_address">Dirección</label>
+          {{ form.address|add_class:"form-control"|attr:"placeholder:Dirección de residencia" }}                    
+          {% for error in form.address.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-xs-12 form-group {% if form.reference.errors %} has-error {% endif %}">
+          <label for="id_address">Referencia</label>
+          {{ form.reference|add_class:"form-control"|attr:"rows:5" }}                    
+          {% for error in form.reference.errors %}
+          <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="col-xs-12">
+          <button type="submit" class="btn btn-primary">
+            <i class="fa fa-check"></i> Continuar
+          </button>          
+        </div>            
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+  {% load staticfiles %}
+  <script src="{% static 'assets/js/animal.js' %}"></script>
+{% endblock %}

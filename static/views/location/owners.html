@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load staticfiles %}
 <h3><i class="fa fa-angle-right"></i> Animales</h3>
 
 <div class="wizard">
@@ -81,4 +84,4 @@
   <i class="fa fa-check"></i> Continuar
 </button>
 
-<div ng-include="'static/partials/modal-delete.html'"></div>
+{% endblock %}

@@ -16,27 +16,18 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 from rest_framework import routers
 from wildlife.views import *
 from veterinary.views import *
 from location.views import *
 
-router = routers.DefaultRouter()
-router.register(r'kinds', KindViewSet)
-router.register(r'breeds', BreedViewSet)
-router.register(r'animals', AnimalViewSet)
-
-router.register(r'vaccines', VaccineViewSet)
-router.register(r'diseases', DiseaseViewSet)
-
-router.register(r'parishes', ParishViewSet)
-router.register(r'owners', OwnerViewSet)
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(router.urls)),
     url(r'^api/civil-record/(?P<charter>\d+)/$', search_charter),
     url(r'^report/ficha/$', create_animal_report),
-    url(r'^kind/$', KindListView.as_view()),
-    url(r'^kind/add/$', KindCreateView.as_view()),
+    url(r'', include('location.urls')), 
+    url(r'', include('wildlife.urls')),
+    url(r'', include('security.urls')),
+    url(r'^$', login_required(TemplateView.as_view(template_name='home.html'))),
 ]
