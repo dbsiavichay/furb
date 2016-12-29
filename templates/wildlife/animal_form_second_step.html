@@ -19,7 +19,7 @@
         </h4>
       </div>
       {% load widget_tweaks %}
-      <form action="" method="POST" class="row" novalidate>
+      <form action="" method="POST" class="row" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
         <input type="hidden" name="owner" value="{{ owner }}">
         <div class="col-md-6 form-group {% if form.name.errors %} has-error {% endif %}">
@@ -107,7 +107,12 @@
         <div class="col-md-6 form-group">
           <label for="id_is_sterilized">Esta esterilizado?</label>
           {{ form.is_sterilized|attr:"style:display:block" }}
-        </div>            
+        </div>   
+
+        <div class="col-md-12 form-group">
+          <label for="id_image">Foto</label>
+          {{ form.image|add_class:"form-control" }}
+        </div>         
 
         <div class="col-xs-12 form-group">
           <label for="contraindications">Contraindicaciones</label>

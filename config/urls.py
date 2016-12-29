@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
@@ -30,4 +31,4 @@ urlpatterns = [
     url(r'', include('wildlife.urls')),
     url(r'', include('security.urls')),
     url(r'^$', login_required(TemplateView.as_view(template_name='home.html'))),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

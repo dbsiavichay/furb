@@ -156,12 +156,19 @@ class AnimalSecondStepView(CreateView):
 		self.object.save()
 		return super(AnimalSecondStepView, self).form_valid(form)
 
+class AnimalUpdateView(UpdateView):
+	model = Animal
+	form_class = AnimalForm
+	success_url = '/animal/'
+	template_name = 'wildlife/animal_form_second_step.html'
 
+	def get_context_data(self, **kwargs):		
+		context = super(AnimalUpdateView, self).get_context_data(**kwargs)
+		context['kinds'] = Kind.objects.all()
+		context['owner'] = self.request.GET.get('owner')
+		return context
 
-
-
-
-
+	
 
 
 

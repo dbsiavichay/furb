@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from PIL import Image
 from django.db import models
 from location.models import Parish
 
@@ -45,3 +45,24 @@ class Animal(models.Model):
 	owner = models.CharField(max_length=15)
 	parish = models.CharField(max_length=6, choices = PARISH_CHOICES)
 	breed = models.ForeignKey(Breed)
+
+	def save(self, *args, **kwargs):
+		super(Animal, self).save(*args, **kwargs)
+		process_image(self.image, 600)		
+
+
+def process_image(image_field, size):		
+		image = Image.open(image_field)
+		width, height = image.size
+		box = (0,0,width, height)
+		if width > height:
+			value = (width - height) / 2
+			box = (value, 0, width - value, height)
+		else:
+			value = (height - width) / 2
+			box = (0, value, width, height - value)
+		cut_image = image.crop(box)
+		new_size = cut_image.width
+		if new_size > size:
+			cut_image = cut_image.resize((size, size), Image.ANTIALIAS)
+		cut_image.save(image_field.path)

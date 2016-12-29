@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^animal/$', login_required(AnimalListView.as_view())),
     url(r'^animal/add/step/1/$', animal_first_step_view),
     url(r'^animal/add/step/2/$', AnimalSecondStepView.as_view()),
+    url(r'^animal/(?P<pk>\d+)/step/2/$', AnimalUpdateView.as_view()),
 ]

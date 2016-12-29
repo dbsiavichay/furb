@@ -1,6 +1,7 @@
 *.pyc
 *.[oa]
 *~
+media/
 security/migrations/
 location/migrations/
 wildlife/migrations/
