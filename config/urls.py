@@ -26,7 +26,6 @@ from location.views import *
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/civil-record/(?P<charter>\d+)/$', search_charter),
-    url(r'^report/ficha/$', create_animal_report),
     url(r'', include('location.urls')), 
     url(r'', include('wildlife.urls')),
     url(r'', include('security.urls')),

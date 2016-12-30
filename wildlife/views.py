@@ -26,6 +26,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle, Table, 
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
 from reportlab.lib.units import cm, mm
 from io import BytesIO
+from PIL import Image as PilImage
 
 class KindListView(ListView):
 	model = Kind	
@@ -124,7 +125,7 @@ def animal_first_step_view(request):
 class AnimalSecondStepView(CreateView):
 	model = Animal
 	form_class = AnimalForm
-	success_url = '/animal/'
+	success_url = '/animal/add/step/3/'	
 	template_name = 'wildlife/animal_form_second_step.html'
 
 	def get_context_data(self, **kwargs):		
@@ -153,7 +154,7 @@ class AnimalSecondStepView(CreateView):
 			code+='000001';
 
 		self.object.code = code
-		self.object.save()
+		self.object.save()		
 		return super(AnimalSecondStepView, self).form_valid(form)
 
 class AnimalUpdateView(UpdateView):
@@ -168,59 +169,153 @@ class AnimalUpdateView(UpdateView):
 		context['owner'] = self.request.GET.get('owner')
 		return context
 
-	
 
-
-
-
-
-
-
-def create_animal_report(request):
+def get_animal_report(request, pk):
     # Create the HttpResponse object with the appropriate PDF headers.
 	response = HttpResponse(content_type='application/pdf')
 	response['Content-Disposition'] = 'inline; filename=padron.pdf'
 
-	animal = request.GET.get('animal', None)
-
-	pdf = None
-	if animal is not None:
-		pdf = pdf_animal_report(animal)
+	pdf = pdf_animal_report(pk)
 
     # Get the value of the StringIO buffer and write it to the response.
 	response.write(pdf)
 	return response
 
 
-def pdf_animal_report(id):
-	animal = Animal.objects.get(pk=id)
-	owner = Owner.objects.using('sim').get(pk=animal.owner)
-	animal_parish = Parish.objects.using('sim').get(code=animal.parish)
-	owner_parish = Parish.objects.using('sim').get(code=owner.parish)
+def pdf_animal_report(pk):
+	animal = Animal.objects.get(pk=pk)
+	owner = Owner.objects.get(pk=animal.owner)
+	animal_parish = Parish.objects.get(code=animal.parish)
+	owner_parish = Parish.objects.get(code=owner.parish)
 	buff = BytesIO()
-	doc = SimpleDocTemplate(buff,pagesize=A4,rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=20,)
+
+	doc = SimpleDocTemplate(buff,pagesize=A4,rightMargin=60, leftMargin=40, topMargin=75, bottomMargin=20,)
 	styles = getSampleStyleSheet()
-	report = [Paragraph("FICHA DE FAUNA URBANA DEL CANTON MORONA", styles['Title']),]
-	report.append(Paragraph('CODIGO: %s' % (animal.code,), styles['Heading2']))
+	report = [Paragraph("FAUNA URBANA", styles['Title']),]
 
-	report.append(Paragraph('DATOS DEL PROPIETARIO', styles['Heading2']))
+	spanc = styles['Heading1']
+	spanc.alignment = TA_CENTER
+	spanc.spaceAfter = 0;
 
-	table_content = [('Nombre:', owner.name, 'Direccion:', owner.address),]
-	table_content.append(('Cedula:', owner.charter, 'Barrio:', owner.neighborhood))
-	table_content.append(('Celular:', owner.cellphone, 'Parroquia:', owner_parish.name))
-	table = Table(table_content)
-	report.append(table)
+	span = styles['Heading6']
+	span.alignment = TA_CENTER
+	span.spaceBefore = 0;
+	span.fontSize = 10
 
-	report.append(Paragraph('DATOS INFORMATIVOS DEL ANIMAL', styles['Heading2']))
 
-	table_content2 = [('Especie:', animal.breed.kind.name, 'Color primario:', animal.primary_color),]
-	table_content2.append(('Raza:', animal.breed.name, 'Color secundario:', animal.secondary_color))
-	table_content2.append(('Nombre:', animal.name, 'Peso:', animal.weight))
-	table_content2.append(('Fecha de nacimiento:', animal.birthday, 'Peso:', animal.weight))
-	table_content2.append(('Residencia:', animal_parish.name, 'Esta esterilizado?:', 'SI' if animal.is_sterilized else 'NO'))
-	table_content2.append(('Sexo:', 'HEMBRA' if animal.gender=='0' else 'MACHO', '', ''))
-	table2 = Table(table_content2)
+	figure = [
+		Image(animal.image.path, width=5*cm, height=5*cm),
+		Paragraph(animal.code, spanc),
+		Paragraph('Código', span),
+	]
+	
+
+	table_content2 = [
+		(figure,'Nombre', animal.name.upper()),
+		(None,'Especie', animal.breed.kind.name.upper()),
+		(None,'Raza', animal.breed.name.upper()),
+		(None,'Color primario', animal.primary_color.upper()),
+		(None,'Color secundario', animal.secondary_color.upper()),
+		(None,'Fecha de nacimiento', str(animal.birthday)[:10]),
+		(None,'Sexo', 'HEMBRA' if animal.gender=='0' else 'MACHO'),
+		(None,'Peso', animal.weight),
+		(None,'Residencia', animal_parish.name.upper()),
+		(None,'Vacunado?', 'SI' if animal.is_vaccinated else 'NO'),
+		(None,'Esterilizado?', 'SI' if animal.is_sterilized else 'NO'),
+	]
+
+	table2 = Table(table_content2, [8*cm, 5*cm,4*cm],hAlign='RIGHT')
+
+	table2.setStyle(
+		TableStyle([			
+			('SPAN',(0,0),(0,-1)),
+			('ALIGN',(0,0),(0,-1),'CENTER'),
+			('ALIGN',(2,0),(2,-1),'RIGHT'),
+			('LINEABOVE',(1,1),(2,15),0.1,colors.gray),
+			('TOPPADDING',(0,0),(0,-1), 15),
+			('TOPPADDING',(1,0),(2,-1), 10),
+			('LEFTPADDING',(1,0),(1,-1), 0),
+			('RIGHTPADDING',(2,0),(2,-1), 0),
+			('VALIGN', (0, 0), (0, -1), 'TOP'),	
+			('VALIGN', (1, 0), (1, -1), 'MIDDLE'),			
+		])
+	)
 	report.append(table2)
 
-	doc.build(report)
+	titleStyle = styles['Heading2']
+	titleStyle.spaceBefore = 20
+
+	report.append(Paragraph('DATOS DEL PROPIETARIO', titleStyle))
+
+	# table_content = [
+	# 	(
+	# 		[Paragraph('Nombre', styles['Heading6']), Paragraph(owner.name.upper, styles['BodyText'])], 
+	# 		[Paragraph('Cédula', styles['Heading6']), Paragraph(owner.charter, styles['BodyText'])]
+	# 	),
+	# 	(
+	# 		[Paragraph('Nombre', styles['Heading6']), Paragraph(owner.name.upper, styles['BodyText'])], 
+	# 		[Paragraph('Cédula', styles['Heading6']), Paragraph(owner.charter, styles['BodyText'])]
+	# 	),
+	# ]
+	#table_content.append(('Cedula:', owner.charter, 'Barrio:', owner.neighborhood))
+	#table_content.append(('Celular:', owner.cellphone, 'Parroquia:', owner_parish.name))
+	#table = Table(table_content)
+	#report.append(table)
+	
+
+	doc.build(report, onFirstPage=get_letterhead_page,onLaterPages=get_letterhead_page)
 	return buff.getvalue()
+
+
+def get_letterhead_page(canvas, doc):
+        # Save the state of our canvas so we can draw on it
+		canvas.saveState()
+		styles = getSampleStyleSheet()
+		base_path = join(settings.BASE_DIR, 'static/assets/report/')
+
+		escudo = Image(base_path + 'escudo_morona.png', width=6*cm,height=2*cm)
+		logo = Image(base_path + 'logo_morona.jpg', width=2*cm,height=2*cm)
+		aside = Image(base_path + 'aside.png', width=1*cm,height=10*cm)
+		footer_caption = Image(base_path + 'footer-caption.png', width=6.5*cm,height=1.5*cm)
+		footer_image = Image(base_path + 'footer-image.png', width=3*cm,height=1.5*cm)
+
+		w, h = escudo.wrap(doc.width, doc.topMargin)
+		escudo.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 60)
+
+		w, h = logo.wrap(doc.width, doc.topMargin)
+		logo.drawOn(canvas, doc.leftMargin + 480, doc.height + doc.topMargin - 60)
+
+		w, h = aside.wrap(doc.width, doc.topMargin)
+		aside.drawOn(canvas, doc.leftMargin + 510, doc.height + doc.topMargin - 375)
+		
+		w, h = footer_caption.wrap(doc.width, doc.topMargin)
+		footer_caption.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 800)
+
+		w, h = footer_image.wrap(doc.width, doc.topMargin)
+		footer_image.drawOn(canvas, doc.leftMargin + 430, doc.height + doc.topMargin - 800)
+
+        # Release the canvas
+		canvas.restoreState()
+
+class NumberedCanvas(canvas.Canvas):
+    def __init__(self, *args, **kwargs):
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self._saved_page_states.append(dict(self.__dict__))
+        self._startPage()
+
+    def save(self):
+        """add page info to each page (page x of y)"""
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_page_number(num_pages)
+            canvas.Canvas.showPage(self)
+        canvas.Canvas.save(self)
+
+    def draw_page_number(self, page_count):
+        self.setFont("Helvetica", 10)
+        self.drawRightString(200*mm, 5*mm,
+            "Pagina %d de %d" % (self._pageNumber, page_count))
