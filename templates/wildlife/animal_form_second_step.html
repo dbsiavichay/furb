@@ -4,7 +4,7 @@
 <h3><i class="fa fa-angle-right"></i> Animales</h3>
 
 <div class="wizard">
-    <a><span class="badge">1</span> Datos del propietario</a>
+    <a href="/animal/add/step/1/"><span class="badge">1</span> Datos del propietario</a>
     <a class="current"><span class="badge">2</span> Datos generales</a>
     <a><span class="badge">3</span> Finalizar e imprimir</a>
 </div>
@@ -62,10 +62,7 @@
           {% endfor %}
         </div>
 
-        <div class="col-md-6 form-group">
-          <label for="age">Edad</label>
-          <input id="age" name="age" type="number" class="form-control" disabled>
-        </div>
+       
         
         <div class="col-md-6 form-group {% if form.primary_color.errors %} has-error {% endif %}">
           <label for="id_primary_color">Color primario</label>
@@ -92,22 +89,27 @@
         </div> 
 
         <div class="col-md-6 form-group {% if form.weight.errors %} has-error {% endif %}">
-          <label for="id_weight">Peso</label>
+          <label for="id_weight">Peso (kg)</label>
           {{ form.weight|add_class:"form-control"|attr:"placeholder:Peso en kilogramos del animal" }}
           {% for error in form.weight.errors %}
           <span class="help-block">{{ error }}</span>
           {% endfor %}
         </div>  
 
-        <div class="col-md-6 form-group">
+        <div class="col-md-2 form-group">
           <label for="id_is_vaccinated">Esta vacunado?</label>
           {{ form.is_vaccinated|attr:"style:display:block" }}
         </div>                      
 
-        <div class="col-md-6 form-group">
+        <div class="col-md-2 form-group">
           <label for="id_is_sterilized">Esta esterilizado?</label>
           {{ form.is_sterilized|attr:"style:display:block" }}
         </div>   
+
+        <div class="col-md-2 form-group">
+          <label for="id_want_sterilize">Desea esterilizar?</label>
+          {{ form.want_sterilize|attr:"style:display:block" }}
+        </div>    
 
         <div class="col-md-12 form-group">
           <label for="id_image">Foto</label>
@@ -122,10 +124,9 @@
           {% endfor %}
         </div>
         <div class="col-xs-12">
-          <button class="btn btn-primary">
-            <i class="fa fa-check"></i> Guardar
-          </button>
-          <button class="btn btn-link">Regresar</button>          
+          <button type="submit" class="btn btn-primary">
+            <i class="fa fa-check"></i> Continuar
+          </button>          
         </div>
       </form>
     </div>

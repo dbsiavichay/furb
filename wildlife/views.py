@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from os import listdir
 from os.path import isfile, join
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
@@ -27,6 +27,9 @@ from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
 from reportlab.lib.units import cm, mm
 from io import BytesIO
 from PIL import Image as PilImage
+
+
+from pure_pagination.mixins import PaginationMixin
 
 class KindListView(ListView):
 	model = Kind	
@@ -95,8 +98,9 @@ class BreedUpdateView(UpdateView):
 		return context
 
 
-class AnimalListView(ListView):
+class AnimalListView(PaginationMixin, ListView):
 	model = Animal
+	paginate_by = 12
 
 
 def animal_first_step_view(request):
@@ -124,8 +128,7 @@ def animal_first_step_view(request):
 
 class AnimalSecondStepView(CreateView):
 	model = Animal
-	form_class = AnimalForm
-	success_url = '/animal/add/step/3/'	
+	form_class = AnimalForm	
 	template_name = 'wildlife/animal_form_second_step.html'
 
 	def get_context_data(self, **kwargs):		
@@ -154,8 +157,10 @@ class AnimalSecondStepView(CreateView):
 			code+='000001';
 
 		self.object.code = code
-		self.object.save()		
+		self.object.save()
+		self.success_url = '/animal/%s/confirm/' % (self.object.id)
 		return super(AnimalSecondStepView, self).form_valid(form)
+
 
 class AnimalUpdateView(UpdateView):
 	model = Animal
@@ -169,20 +174,25 @@ class AnimalUpdateView(UpdateView):
 		context['owner'] = self.request.GET.get('owner')
 		return context
 
+class AnimalThirdStepView(DetailView):
+	model = Animal	
+	success_url = '/animal/'
+	template_name = 'wildlife/animal_confirm_third_step.html'	
+
 
 def get_animal_report(request, pk):
     # Create the HttpResponse object with the appropriate PDF headers.
 	response = HttpResponse(content_type='application/pdf')
 	response['Content-Disposition'] = 'inline; filename=padron.pdf'
 
-	pdf = pdf_animal_report(pk)
+	pdf = pdf_animal_report(pk, request.user)
 
     # Get the value of the StringIO buffer and write it to the response.
 	response.write(pdf)
 	return response
 
 
-def pdf_animal_report(pk):
+def pdf_animal_report(pk, user):
 	animal = Animal.objects.get(pk=pk)
 	owner = Owner.objects.get(pk=animal.owner)
 	animal_parish = Parish.objects.get(code=animal.parish)
@@ -191,7 +201,10 @@ def pdf_animal_report(pk):
 
 	doc = SimpleDocTemplate(buff,pagesize=A4,rightMargin=60, leftMargin=40, topMargin=75, bottomMargin=20,)
 	styles = getSampleStyleSheet()
-	report = [Paragraph("FAUNA URBANA", styles['Title']),]
+	report = [
+		Paragraph("DIRECCIÓN DE GESTION AMBIENTAL Y SERVICIOS PÚBLICOS", styles['Title']),
+		Paragraph("REGISTRO DE FAUNA URBANA", styles['Title']),
+	]
 
 	spanc = styles['Heading1']
 	spanc.alignment = TA_CENTER
@@ -202,23 +215,24 @@ def pdf_animal_report(pk):
 	span.spaceBefore = 0;
 	span.fontSize = 10
 
-
+	path = join(settings.BASE_DIR, 'static/assets/icons/')
 	figure = [
-		Image(animal.image.path, width=5*cm, height=5*cm),
+		Paragraph(animal.name.upper(), styles['Title']),
+		Image(animal.image.path if animal.image else path + animal.breed.kind.image, width=5*cm, height=5*cm),
 		Paragraph(animal.code, spanc),
 		Paragraph('Código', span),
 	]
 	
 
-	table_content2 = [
-		(figure,'Nombre', animal.name.upper()),
-		(None,'Especie', animal.breed.kind.name.upper()),
+	table_content2 = [		
+		(figure,'Especie', animal.breed.kind.name.upper()),
 		(None,'Raza', animal.breed.name.upper()),
 		(None,'Color primario', animal.primary_color.upper()),
 		(None,'Color secundario', animal.secondary_color.upper()),
 		(None,'Fecha de nacimiento', str(animal.birthday)[:10]),
-		(None,'Sexo', 'HEMBRA' if animal.gender=='0' else 'MACHO'),
-		(None,'Peso', animal.weight),
+		(None,'Edad', animal.age().upper()),
+		(None,'Sexo', 'MASCULINO' if animal.gender=='M' else 'FEMENINO'),
+		(None,'Peso (Kg)', animal.weight),
 		(None,'Residencia', animal_parish.name.upper()),
 		(None,'Vacunado?', 'SI' if animal.is_vaccinated else 'NO'),
 		(None,'Esterilizado?', 'SI' if animal.is_sterilized else 'NO'),
@@ -231,8 +245,8 @@ def pdf_animal_report(pk):
 			('SPAN',(0,0),(0,-1)),
 			('ALIGN',(0,0),(0,-1),'CENTER'),
 			('ALIGN',(2,0),(2,-1),'RIGHT'),
-			('LINEABOVE',(1,1),(2,15),0.1,colors.gray),
-			('TOPPADDING',(0,0),(0,-1), 15),
+			('LINEBELOW',(1,0),(2,-1),0.1,colors.gray),
+			('TOPPADDING',(0,0),(0,-1), 10),
 			('TOPPADDING',(1,0),(2,-1), 10),
 			('LEFTPADDING',(1,0),(1,-1), 0),
 			('RIGHTPADDING',(2,0),(2,-1), 0),
@@ -247,21 +261,54 @@ def pdf_animal_report(pk):
 
 	report.append(Paragraph('DATOS DEL PROPIETARIO', titleStyle))
 
-	# table_content = [
-	# 	(
-	# 		[Paragraph('Nombre', styles['Heading6']), Paragraph(owner.name.upper, styles['BodyText'])], 
-	# 		[Paragraph('Cédula', styles['Heading6']), Paragraph(owner.charter, styles['BodyText'])]
-	# 	),
-	# 	(
-	# 		[Paragraph('Nombre', styles['Heading6']), Paragraph(owner.name.upper, styles['BodyText'])], 
-	# 		[Paragraph('Cédula', styles['Heading6']), Paragraph(owner.charter, styles['BodyText'])]
-	# 	),
-	# ]
-	#table_content.append(('Cedula:', owner.charter, 'Barrio:', owner.neighborhood))
-	#table_content.append(('Celular:', owner.cellphone, 'Parroquia:', owner_parish.name))
-	#table = Table(table_content)
-	#report.append(table)
+	tstyle = TableStyle([
+			('LINEBELOW',(0,0),(-1,3),0.1,colors.gray),
+			('LEFTPADDING',(0,0),(-1,-1), 0),
+			('RIGHTPADDING',(0,0),(-1,-1), 0),	
+	])
+
+	pstyle = getSampleStyleSheet()['BodyText']
+	pstyle.textColor = colors.gray
+	pstyle.spaceAfter = 5
+
+	cpropietario1 = [
+		([Paragraph('', styles['BodyText']),Paragraph(owner.name.upper(), styles['BodyText'])],),
+		([Paragraph('Nombre', pstyle),Paragraph(owner_parish.name.upper(), styles['BodyText'])],),
+		([Paragraph('Parroquia', pstyle),Paragraph(owner.neighborhood.upper(), styles['BodyText'])],),
+		([Paragraph('Barrio', pstyle),Paragraph(owner.address.upper(), styles['BodyText'])],),
+		([Paragraph('Dirección', pstyle),Paragraph('', styles['BodyText'])],),
+	]
+
+	tablepropietario1 = Table(cpropietario1, style=tstyle)
+
+	cpropietario2 = [
+		([Paragraph('', pstyle),Paragraph(owner.charter, styles['BodyText'])],),
+		([Paragraph('Cédula', pstyle),Paragraph(owner.telephone if owner.telephone else '---', styles['BodyText'])],),
+		([Paragraph('Telefono', pstyle),Paragraph(owner.cellphone if owner.cellphone else '---', styles['BodyText'])],),
+		([Paragraph('Celular', pstyle),Paragraph(owner.reference.upper() if owner.reference else '---', styles['BodyText'])],),
+		([Paragraph('Referencia', pstyle),Paragraph('', styles['BodyText'])],),
+	]
+	tablepropietario2 = Table(cpropietario2, style=tstyle)
+
 	
+	table = Table([(tablepropietario1, tablepropietario2)])
+	report.append(table)
+
+	con = [
+		('__________________________','__________________________'),
+		(user.get_full_name(), owner.name.title()),
+		('FUNCIONARIO MUNICIPAL', 'PROPIETARIO')
+	]
+	tfirmas = Table(con, spaceBefore=40)
+	tfirmas.setStyle(
+		TableStyle([						
+			('ALIGN',(0,0),(-1,-1),'CENTER'),
+			('RIGHTPADDING',(0,0),(0,-1), 30),
+			('LEFTPADDING',(1,0),(1,-1), 30),
+		])
+	)
+	report.append(tfirmas)
+
 
 	doc.build(report, onFirstPage=get_letterhead_page,onLaterPages=get_letterhead_page)
 	return buff.getvalue()

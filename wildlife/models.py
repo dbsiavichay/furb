@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from datetime import datetime
 from PIL import Image, ImageOps, ImageDraw
 from django.db import models
 from location.models import Parish
@@ -23,8 +26,8 @@ class Breed(models.Model):
 
 class Animal(models.Model):
 	GENDER_CHOICES = (		
-        ('H', 'Hembra'),
-        ('M', 'Macho'),        
+        ('F', 'Femenino'),
+        ('M', 'Masculino'),        
     )
 
 	PARISH_CHOICES = (
@@ -33,22 +36,44 @@ class Animal(models.Model):
 
 	code = models.CharField(max_length=32)
 	name = models.CharField(max_length=128)
-	birthday = models.DateTimeField()
+	birthday = models.DateField()
 	primary_color = models.CharField(max_length=64)
 	secondary_color = models.CharField(max_length=64, blank=True, null=True)
 	gender = models.CharField(max_length=4, choices = GENDER_CHOICES)
 	weight = models.DecimalField(max_digits=6, decimal_places=2)
 	is_sterilized = models.BooleanField(default=False)
 	is_vaccinated = models.BooleanField(default=False)
+	want_sterilize = models.BooleanField(default=False)
 	image = models.ImageField(upload_to='animals', blank=True, null=True)
 	contraindications = models.TextField(blank=True, null=True)
 	owner = models.CharField(max_length=15)
 	parish = models.CharField(max_length=6, choices = PARISH_CHOICES)
 	breed = models.ForeignKey(Breed)
+	
+	def age(self):
+		birthday = str(self.birthday)[:10].split('-')
+		diff = (datetime.now() - datetime(int(birthday[0]), int(birthday[1]), int(birthday[2]))).days
+		years = int(diff/365)
+
+		diffmonths = diff%365
+		months = int(diffmonths/30)
+
+		periods = (
+			(years, "año", "años"),
+			(months, "mes", "meses"),		    
+		)
+
+		age = ''
+		for period, singular, plural in periods:
+			if period >= 1:
+				age +=  '%d %s ' % (period, singular if period == 1 else plural)
+
+		return age
 
 	def save(self, *args, **kwargs):
 		super(Animal, self).save(*args, **kwargs)
-		process_image(self.image, 600)
+		if self.image:
+			process_image(self.image, 600)
 		#circle_image(self.image)		
 
 

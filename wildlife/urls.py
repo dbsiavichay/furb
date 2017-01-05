@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^animal/$', login_required(AnimalListView.as_view())),
     url(r'^animal/add/step/1/$', animal_first_step_view),
     url(r'^animal/add/step/2/$', AnimalSecondStepView.as_view()),
-    url(r'^animal/add/step/3/$', TemplateView.as_view(template_name='wildlife/animal_confirm_third_step.html')),
+    url(r'^animal/(?P<pk>\d+)/confirm/$', AnimalThirdStepView.as_view()),
     url(r'^animal/(?P<pk>\d+)/step/2/$', AnimalUpdateView.as_view()),
     url(r'^animal/(?P<pk>\d+)/report/$', get_animal_report),
 ]

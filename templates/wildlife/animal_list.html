@@ -14,30 +14,40 @@
           <i class="fa fa-plus-circle"></i> Agregar
         </a>
       </div>
-      {% for animal in object_list %}
-      <div class="card">
-        <figure>
-          {% if animal.image %}
-          <img class="img-circle" src="{{ animal.image.url }}"/>
-          {% else %}
-          <img  src="{% static 'assets/icons/' %}{{ animal.breed.kind.image }}"/>
-          {% endif %}
-        </figure>
-        <div class="card-actions">
-          <div class="actions">
-            <a href="#" class="action"><span class="fa fa-print"></span></a>
-            <a href="/animal/{{ animal.id }}/step/2/?owner={{ animal.owner }}" class="action"><span class="fa fa-pencil"></span></a>
-            <a href="#" class="action"><span class="fa fa-close"></span></a>
+      
+      {% include "partials/pagination.html" %}
+
+      <div class="row">
+        {% for animal in object_list %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card">
+            <figure>
+              {% if animal.image %}
+              <img class="img-circle" src="{{ animal.image.url }}"/>
+              {% else %}
+              <img  src="{% static 'assets/icons/' %}{{ animal.breed.kind.image }}"/>
+              {% endif %}
+            </figure>
+            <div class="card-actions">
+              <div class="actions">
+                <a href="/animal/{{ animal.id }}/report/" target="_blank" class="action"><span class="fa fa-print"></span></a>
+                <a href="/animal/{{ animal.id }}/step/2/?owner={{ animal.owner }}" class="action"><span class="fa fa-pencil"></span></a>
+                <a href="#" class="action"><span class="fa fa-close"></span></a>
+              </div>
+            </div>
+            <div class="card-info">
+              <strong>#{{ animal.code }}</strong>
+              <h2>{{ animal.name }}</h2>
+              <span class="tag bg-primary">{{ animal.breed.kind.name }}</span>
+              <span class="tag bg-success">{% if animal.gender == 'F' %}Femenino{% else %}Masculino{% endif %}</span>
+            </div>
           </div>
         </div>
-        <div class="card-info">
-          <strong>#{{ animal.code }}</strong>
-          <h2>{{ animal.name }}</h2>
-          <span class="tag bg-primary">{{ animal.breed.kind.name }}</span>
-          <span class="tag bg-success">{% if animal.gender == 'H' %}Hembra{% else %}Macho{% endif %}</span>
-        </div>
+        {% empty %}
+        <p style="margin-left: 15px;">No existen registros.</p>
+        {% endfor %}        
       </div>
-      {% endfor %}
+
     </div>
   </div>
 </div>

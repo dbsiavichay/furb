@@ -8,16 +8,29 @@
       <div class="content-panel-header">
         <h4>
           <i class="fa fa-angle-right"></i>
-          Bienvenido 
-          {% if user.get_full_name %}
-            {{ user.get_full_name }}
-          {% else %}
-            {{ user.username }}
-          {% endif %}
+          Página de inicio           
         </h4>        
-      </div>
-      <div class="text-center" style="margin: 100px 0">
-        <img src="{% static 'assets/img/logo_macas.png' %}">
+      </div>      
+      <div class="text-center">
+        <h1>
+          BIENVENIDO
+          {% if user.get_full_name%}
+            {{ user.get_full_name | upper }}
+          {% else %}
+            {{ user.username | upper }}
+          {% endif %}
+        </h1>
+        <img height="50" src="{% static 'assets/img/logo_macas.png' %}">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+          </div>          
+        </div>        
       </div>
     </div>
   </div>

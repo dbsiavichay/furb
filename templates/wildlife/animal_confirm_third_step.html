@@ -5,7 +5,7 @@
 
 <div class="wizard">
     <a><span class="badge">1</span> Datos del propietario</a>
-    <a><span class="badge">2</span> Datos generales</a>
+    <a href="/animal/{{ object.id }}/step/2/?owner={{ object.owner }}"><span class="badge">2</span> Datos generales</a>
     <a class="current"><span class="badge">3</span> Finalizar e imprimir</a>
 </div>
 
@@ -18,9 +18,19 @@
           Confirmacíon e impresión
         </h4>
       </div>
-      <iframe class="content-panel" style="height:100%;" src="/animal/21/report/">
+      <iframe class="content-panel" style="height:100%;" src="/animal/{{ object.id }}/report/">
 	      <p>Your browser does not support iframes.</p>
-	  </iframe>
+	    </iframe>
+
+        <div class="col-xs-12">
+          <a href="/animal/" class="btn btn-primary">
+            <i class="fa fa-check"></i> Finalizar
+          </a>
+          <a href="/animal/add/step/2/?owner={{ object.owner }}" class="btn btn-danger">
+            <i class="fa fa-check"></i> Finalizar y agregar otro al mismo propietario
+          </a>
+        </div>
+      
     </div>
   </div>
 </div>
