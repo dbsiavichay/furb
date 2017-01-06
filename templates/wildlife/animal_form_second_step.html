@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+
+{% block css %}
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static 'plugins/datepicker/datepicker.css' %}">
+{% endblock %}
+
 {% block content %}
 {% load staticfiles %}
 <h3><i class="fa fa-angle-right"></i> Animales</h3>
@@ -31,18 +37,14 @@
         </div>
         <div class="col-md-6 form-group">
           <label for="kind">Especie</label>
-          <select id="kind" name="kind" class="form-control" required>
-              <option value="">---------</option>
-              {% for kind in kinds %}
-              <option value="{{ kind.id }}">{{ kind.name }}</option>
-              {% endfor %}
-          </select>              
+          {{ form.kind|add_class:"form-control" }}
         </div>
         <div class="col-md-6 form-group {% if form.breed.errors %} has-error {% endif %}">
           <label for="id_breed">Raza</label>
-          <select id="id_breed" name="breed" class="form-control" required>
+          <!-- <select id="id_breed" name="breed" class="form-control" required>
             <option value="">---------</option>
-          </select>
+          </select> -->
+          {{ form.breed|add_class:"form-control" }}
           {% for error in form.breed.errors %}
           <span class="help-block">{{ error }}</span>
           {% endfor %}
@@ -56,12 +58,11 @@
         </div>            
         <div class="col-md-6 form-group {% if form.birthday.errors %} has-error {% endif %}">
           <label for="id_birthday">Fecha de nacimiento</label>
-          {{ form.birthday|add_class:"form-control"|attr:"type:date" }}
+          {{ form.birthday|add_class:"form-control datepicker" }}
           {% for error in form.birthday.errors %}
           <span class="help-block">{{ error }}</span>
           {% endfor %}
         </div>
-
        
         
         <div class="col-md-6 form-group {% if form.primary_color.errors %} has-error {% endif %}">
@@ -138,5 +139,6 @@
 
 {% block js %}
   {% load staticfiles %}
+  <script src="{% static 'plugins/datepicker/datepicker.js' %}"></script>  
   <script src="{% static 'assets/js/animal-2.js' %}"></script>
 {% endblock %}

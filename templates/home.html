@@ -12,23 +12,53 @@
         </h4>        
       </div>      
       <div class="text-center">
-        <h1>
+        <h3>
           BIENVENIDO
           {% if user.get_full_name%}
             {{ user.get_full_name | upper }}
           {% else %}
             {{ user.username | upper }}
           {% endif %}
-        </h1>
+        </h3>
         <img height="50" src="{% static 'assets/img/logo_macas.png' %}">
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
-            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
-            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
-            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
-            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
-            <div class="col-sm-4"><span class="fa fa-paw"></span></div>
+        <div class="row" style="margin-top: 50px">
+          <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-4">
+              <a href="/kind/" class="btn btn-default btn-block btn-menu">
+                <span class="fa fa-paw"></span>
+                <strong>Especies</strong>
+              </a>
+            </div>
+            <div class="col-sm-4">
+              <a href="/breed/" class="btn btn-default btn-block btn-menu">
+                <span class="fa fa-paw"></span>
+                <strong>Razas</strong>
+              </a>
+            </div>
+            <div class="col-sm-4">
+              <a href="/animal/" class="btn btn-default btn-block btn-menu">
+                <span class="fa fa-paw"></span>
+                <strong>Animales</strong>
+              </a>
+            </div>
+            <div class="col-sm-4">
+              <a href="#" class="btn btn-default btn-block btn-menu">
+                <span class="fa fa-print"></span>
+                <strong>Reportes</strong>
+              </a>
+            </div>
+            <div class="col-sm-4">
+              <a href="#" class="btn btn-default btn-block btn-menu">
+                <span class="fa fa-user"></span>
+                <strong>Cuenta</strong>
+              </a>
+            </div>
+            <div class="col-sm-4">
+              <a href="/logout/" class="btn btn-default btn-block btn-menu">
+                <span class="fa fa-sign-out"></span>
+                <strong>Salir</strong>
+              </a>
+            </div>
           </div>          
         </div>        
       </div>

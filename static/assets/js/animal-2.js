@@ -1,5 +1,9 @@
 $(function () {
-	$('#kind').on('change', function () {
+	$('.datepicker').datepicker({
+		format: 'dd/mm/yyyy'
+	})
+
+	$('#id_kind').on('change', function () {
 		var kind = $(this).val();
 		$.ajax('/breed/', {			
 			data: {'kind': kind},
@@ -15,4 +19,9 @@ $(function () {
 			}
 		});
 	});
+
+	$('#id_birthday').datepicker()
+		.on('changeDate', function (event) {			
+			$('#id_birthday').datepicker('hide');
+		});
 });

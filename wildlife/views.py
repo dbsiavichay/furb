@@ -132,8 +132,7 @@ class AnimalSecondStepView(CreateView):
 	template_name = 'wildlife/animal_form_second_step.html'
 
 	def get_context_data(self, **kwargs):		
-		context = super(AnimalSecondStepView, self).get_context_data(**kwargs)
-		context['kinds'] = Kind.objects.all()
+		context = super(AnimalSecondStepView, self).get_context_data(**kwargs)		
 		context['owner'] = self.request.GET.get('owner')
 		return context
 

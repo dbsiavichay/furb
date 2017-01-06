@@ -30,23 +30,14 @@ body {
 
 /*HOME*/
 
-.home-menu {
-    margin-top: 50px;
+.btn-menu {
+    padding: 30px;
+    margin-bottom: 10px;
 }
 
-.home-menu li {
-    display: inline-block;    
-    height: 100px;
-    width: 100px;    
+.btn-menu .fa {
+    display: block;
     font-size: 30px;
-    padding-top: 15px;
-    background: #797979;
-    color: white;
-    border-radius: 5px;
-}
-
-.home-menu li p {
-    font-size: 14px;
 }
 
 
