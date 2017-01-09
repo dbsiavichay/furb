@@ -81,14 +81,12 @@
             </li>
 
             <li class="sub-menu">
-              <a href="#" >
+              <a {% if 'password' in request.path %} class="active" {% endif %} href="#" >
                 <i class="fa fa-user"></i>
                 <span>Cuenta</span>
               </a>
               <ul class="sub">
-                <li><a href="#">Item 1</a></li>
-                <li><a href="#">Item 2</a></li>
-                <li><a href="#">Item 3</a></li>
+                <li {% if 'password' in request.path %} class="active" {% endif %}><a href="/change-password/">Cambiar contraseña</a></li>
               </ul>
             </li>
 
