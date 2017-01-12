@@ -38,6 +38,7 @@
             <div class="card-info">
               <strong>#{{ animal.code }}</strong>
               <h2>{{ animal.name }}</h2>
+              <p>PROP: {{ animal.owner }}</p>
               <span class="tag bg-primary">{{ animal.breed.kind.name }}</span>
               <span class="tag bg-success">{% if animal.gender == 'H' %}Hembra{% else %}Macho{% endif %}</span>
             </div>
