@@ -25,9 +25,13 @@ class Breed(models.Model):
 		return self.name
 
 class Animal(models.Model):
+
+	class Meta:
+		ordering = ['code',]
+
 	GENDER_CHOICES = (		
-        ('F', 'Femenino'),
-        ('M', 'Masculino'),        
+        ('H', 'Hembra'),
+        ('M', 'Macho'),        
     )
 
 	PARISH_CHOICES = (

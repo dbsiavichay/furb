@@ -140,7 +140,7 @@ class AnimalSecondStepView(CreateView):
 		self.object = form.save(commit=False)
 
 		parish = Parish.objects.get(pk=self.object.parish)
-		ans = Animal.objects.filter(parish=self.object.parish, gender=self.object.gender, breed__kind=self.object.breed.kind).order_by('id')[:1]
+		ans = Animal.objects.filter(parish=self.object.parish, gender=self.object.gender, breed__kind=self.object.breed.kind).order_by('-id')[:1]
 		code = self.object.breed.kind.code + self.object.gender + parish.gencode
 
 		if(len(ans)>0):
