@@ -5,7 +5,6 @@ from datetime import datetime
 from PIL import Image, ImageOps, ImageDraw
 from django.db import models
 from location.models import Parish, Owner
-from simple_history.models import HistoricalRecords
 
 class Kind(models.Model):
 	class Meta:
@@ -54,7 +53,6 @@ class Animal(models.Model):
 	owner = models.CharField(max_length=15)
 	parish = models.CharField(max_length=6, choices = PARISH_CHOICES)
 	breed = models.ForeignKey(Breed)
-	history = HistoricalRecords()
 	
 	def age(self):
 		birthday = str(self.birthday)[:10].split('-')
