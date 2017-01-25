@@ -69,14 +69,12 @@
             </li>
 
             <li class="sub-menu">
-              <a href="#" >
+              <a {% if 'report' in request.path  %} class="active" {% endif %} href="#" >
                 <i class="fa fa-print"></i>
                 <span>Reportes</span>
               </a>
               <ul class="sub">
-                <li><a href="#">Item 1</a></li>
-                <li><a href="#">Item 2</a></li>
-                <li><a href="#">Item 3</a></li>
+                <li {% if 'by_parish' in request.path %} class="active" {% endif %}><a href="/by_parish/report/">Animales por parroquia</a></li>                
               </ul>
             </li>
 

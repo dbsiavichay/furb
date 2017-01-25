@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'', include('location.urls')), 
     url(r'', include('wildlife.urls')),
     url(r'', include('security.urls')),
+    url(r'', include('reports.urls')),
     url(r'^$', login_required(TemplateView.as_view(template_name='home.html'))),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

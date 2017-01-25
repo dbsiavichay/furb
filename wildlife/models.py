@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 from PIL import Image, ImageOps, ImageDraw
 from django.db import models
-from location.models import Parish
+from location.models import Parish, Owner
 
 class Kind(models.Model):
 	class Meta:
@@ -73,6 +73,14 @@ class Animal(models.Model):
 				age +=  '%d %s ' % (period, singular if period == 1 else plural)
 
 		return age
+
+	def get_owner_name(self):
+		owner = Owner.objects.get(charter=self.owner)
+		return owner.name
+
+	def get_parish_name(self):
+		parish = Parish.objects.get(code=self.parish)
+		return parish.name
 
 	def save(self, *args, **kwargs):
 		super(Animal, self).save(*args, **kwargs)

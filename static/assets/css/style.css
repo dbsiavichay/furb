@@ -24,8 +24,9 @@ body {
 }
 
 .tag {
-    padding: 1px 10px;
-    border-radius: 10px;
+    /*padding: 1px 10px;
+    border-radius: 10px;*/
+    font-size: 12px;
 }
 
 /*HOME*/
@@ -1206,6 +1207,7 @@ PANELS CONFIGURATIONS
   border-radius: 5px;
   display: inline-block;
   margin-bottom: 15px;
+  padding-bottom: 5px;
 }
 
 .card figure {

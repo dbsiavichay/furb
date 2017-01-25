@@ -198,7 +198,7 @@ def pdf_animal_report(pk, user):
 	owner_parish = Parish.objects.get(code=owner.parish)
 	buff = BytesIO()
 
-	doc = SimpleDocTemplate(buff,pagesize=A4,rightMargin=60, leftMargin=40, topMargin=75, bottomMargin=20,)
+	doc = SimpleDocTemplate(buff,pagesize=A4,rightMargin=60, leftMargin=40, topMargin=75, bottomMargin=50,)
 	styles = getSampleStyleSheet()
 	report = [
 		Paragraph("DIRECCIÓN DE GESTION AMBIENTAL Y SERVICIOS PÚBLICOS", styles['Title']),
@@ -326,19 +326,19 @@ def get_letterhead_page(canvas, doc):
 		footer_image = Image(base_path + 'footer-image.png', width=3*cm,height=1.5*cm)
 
 		w, h = escudo.wrap(doc.width, doc.topMargin)
-		escudo.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 60)
+		escudo.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 20)
 
 		w, h = logo.wrap(doc.width, doc.topMargin)
-		logo.drawOn(canvas, doc.leftMargin + 480, doc.height + doc.topMargin - 60)
+		logo.drawOn(canvas, doc.leftMargin + 480, doc.height + doc.topMargin - 20)
 
 		w, h = aside.wrap(doc.width, doc.topMargin)
 		aside.drawOn(canvas, doc.leftMargin + 510, doc.height + doc.topMargin - 375)
 		
 		w, h = footer_caption.wrap(doc.width, doc.topMargin)
-		footer_caption.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 800)
+		footer_caption.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - 770)
 
 		w, h = footer_image.wrap(doc.width, doc.topMargin)
-		footer_image.drawOn(canvas, doc.leftMargin + 430, doc.height + doc.topMargin - 800)
+		footer_image.drawOn(canvas, doc.leftMargin + 430, doc.height + doc.topMargin - 770)
 
         # Release the canvas
 		canvas.restoreState()
@@ -363,5 +363,5 @@ class NumberedCanvas(canvas.Canvas):
 
     def draw_page_number(self, page_count):
         self.setFont("Helvetica", 10)
-        self.drawRightString(200*mm, 5*mm,
-            "Pagina %d de %d" % (self._pageNumber, page_count))
+        self.drawRightString(115*mm, 5*mm,
+            "Página %d de %d" % (self._pageNumber, page_count))
