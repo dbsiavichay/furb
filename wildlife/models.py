@@ -18,6 +18,9 @@ class Kind(models.Model):
 		return self.name
 
 class Breed(models.Model):
+	class Meta:
+		ordering = ['kind','name']
+
 	name = models.CharField(max_length=128)
 	kind = models.ForeignKey(Kind)
 
@@ -27,7 +30,7 @@ class Breed(models.Model):
 class Animal(models.Model):
 
 	class Meta:
-		ordering = ['code',]
+		ordering = ['breed__kind', 'gender', 'parish', 'id']
 
 	GENDER_CHOICES = (		
         ('H', 'Hembra'),
