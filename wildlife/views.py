@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from django.db.models import Q
 from django.http import JsonResponse
 from django.conf import settings
 from os import listdir
@@ -101,6 +102,16 @@ class BreedUpdateView(UpdateView):
 class AnimalListView(PaginationMixin, ListView):
 	model = Animal
 	paginate_by = 12
+
+	def get_queryset(self):
+		queryset = super(AnimalListView, self).get_queryset()
+		keyword = self.kwargs.get('keyword') or self.request.GET.get('keyword') or None
+
+		if keyword is not None:
+			queryset = queryset.filter(Q(code__icontains=keyword)|Q(name__icontains=keyword)
+				|Q(owner__startswith=keyword))
+
+		return queryset
 
 
 def animal_first_step_view(request):

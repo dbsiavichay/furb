@@ -30,6 +30,14 @@ $(function () {
 			}
 		});
 	});
+
+
+	$('#search').on('keyup', function (e) {
+		if (e.keyCode != 13) return;
+		var keyword = $(this).val();
+		var url = '/animal/?keyword=' + keyword;
+		$(location).attr('href', url);
+	});
 });
 
 var isValid = function (charter) {

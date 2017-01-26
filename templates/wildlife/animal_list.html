@@ -14,9 +14,8 @@
           <i class="fa fa-plus-circle"></i> Agregar
         </a>
       </div>
-      <div class="clearfix">
-        <div>
-          <div class="dropdown" style="display: inline-block; margin-top: 20px;">
+      <div class="clearfix">        
+          <!-- <div class="dropdown" style="display: inline-block; margin-top: 20px;">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               Orden por defecto
               <span class="caret"></span>
@@ -26,12 +25,19 @@
               <li><a href="#">Parroquia</a></li>
               <li><a href="#">Propietario</a></li>              
             </ul>
-          </div>
-          <div class="pull-right">
-            {% include "partials/pagination.html" %}    
+          </div> -->
+        <div class="col-xs-5" style="display: inline-block; margin: 20px 0 20px -15px">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            <input id="search" type="text" class="form-control" placeholder="Código, nombre o cédula de propietario">
+            <span class="input-group-btn">
+              <button class="btn btn-primary"><i class="fa fa-send"></i></button>
+            </span>
           </div>
         </div>
-        
+        <div class="pull-right">
+          {% include "partials/pagination.html" %}    
+        </div>
       </div>
       
       
@@ -63,6 +69,7 @@
               <strong>#{{ animal.code }}</strong>
               <h2>{{ animal.name }}</h2>
               <p>{{ animal.get_owner_name|title|truncatechars:33 }}</p>
+              <p>CI. {{ animal.owner }}</p>
               <span class="label label-primary tag">{{ animal.breed.kind.name|title }}</span>
               <span class="label label-success tag">{% if animal.gender == 'H' %}Hembra{% else %}Macho{% endif %}</span>
               <span class="label label-info tag">{{ animal.get_parish_name|title }}</span>              
@@ -78,3 +85,8 @@
   </div>
 </div>
 {% endblock%}
+
+{% block js %}
+{% load staticfiles %}
+<script src="{% static 'assets/js/animal.js' %}"></script>
+{% endblock %}
