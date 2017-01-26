@@ -38,6 +38,12 @@ $(function () {
 		var url = '/animal/?keyword=' + keyword;
 		$(location).attr('href', url);
 	});
+
+	$('#btn-search').on('click', function () {
+		var keyword = $('#search').val();
+		var url = '/animal/?keyword=' + keyword;
+		$(location).attr('href', url);
+	});
 });
 
 var isValid = function (charter) {
