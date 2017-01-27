@@ -21,7 +21,7 @@ class Breed(models.Model):
 	class Meta:
 		ordering = ['kind','name']
 
-	name = models.CharField(max_length=128)
+	name = models.CharField(max_length=128, unique=True, verbose_name='nombre')
 	kind = models.ForeignKey(Kind)
 
 	def __unicode__(self):
