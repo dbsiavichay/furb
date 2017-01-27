@@ -20,8 +20,9 @@ class Kind(models.Model):
 class Breed(models.Model):
 	class Meta:
 		ordering = ['kind','name']
+		unique_together = ('kind', 'name')
 
-	name = models.CharField(max_length=128, unique=True, verbose_name='nombre')
+	name = models.CharField(max_length=128, verbose_name='nombre')
 	kind = models.ForeignKey(Kind)
 
 	def __unicode__(self):
