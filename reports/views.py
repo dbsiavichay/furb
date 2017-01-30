@@ -27,13 +27,16 @@ def get_by_parish(request, parish):
 	response = HttpResponse(content_type='application/pdf')
 	response['Content-Disposition'] = 'inline; filename=reporte.pdf'
 
-	pdf = get_animal_by_parish_report(parish)
+	sterilized = request.GET.get('sterilized', False)
+
+	pdf = get_animal_by_parish_report(parish, sterilized)
 
 	response.write(pdf)
 	return response
 
-def get_animal_by_parish_report(parish):
+def get_animal_by_parish_report(parish, sterilized):
 	animals = Animal.objects.filter(parish=parish).order_by('owner')
+	if sterilized: animals = animals.filter(want_sterilize=True)
 	buff = BytesIO()
 
 	doc = SimpleDocTemplate(buff,pagesize=A4,rightMargin=60, leftMargin=40, topMargin=75, bottomMargin=50,)

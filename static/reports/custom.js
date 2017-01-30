@@ -7,7 +7,9 @@ $(function () {
 
 	$('.btn-danger').on('click', function () {
 		if (!parish) return; 
-		var url = '/by_parish/'+ parish + '/report/';
+		var filter = $('#sterilized').is(':checked')?'?sterilized=true':'';
+
+		var url = '/by_parish/'+ parish + '/report/'+filter;
 		$('iframe').attr('src', url);
 	});
 });
