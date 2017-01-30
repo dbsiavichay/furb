@@ -82,6 +82,15 @@ class Animal(models.Model):
 		owner = Owner.objects.get(charter=self.owner)
 		return owner.name
 
+	def get_owner_contact(self):
+		owner = Owner.objects.get(charter=self.owner)
+		if owner.telephone and owner.cellphone:
+			return '%s / %s' % (owner.telephone, owner.cellphone)
+		elif owner.telephone:
+			return owner.telephone
+		else:
+			return owner.cellphone
+
 	def get_parish_name(self):
 		parish = Parish.objects.get(code=self.parish)
 		return parish.name

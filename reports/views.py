@@ -75,20 +75,20 @@ def get_animal_by_parish_report(parish, sterilized):
 	contentStyle = styles['BodyText']
 	contentStyle.fontSize = 5
 
-	columns_width = [0.5*cm, 2.5*cm,1.3*cm,1.5*cm,1.6*cm,1.8*cm,1.7*cm,5*cm]
+	columns_width = [0.5*cm, 2.5*cm,1.3*cm,1.3*cm,1.8*cm,1.5*cm,4.5*cm,3*cm]
 
-	headings = ('N°','NOMBRE','ESPECIE', 'PESO', 'VACUNADO?', 'ESTERILIZAR?', 'UBICACIÓN', 'PROPIETARIO')
+	headings = ('N°','NOMBRE','ESPECIE', 'PESO', 'ESTERILIZAR?', 'UBICACIÓN', 'PROPIETARIO', 'CONTACTO')
 	headings = (Paragraph(h, headingStyle) for h in headings)	
 
 	content = [(
 		Paragraph(str(index + 1), contentStyle),
 		Paragraph(animal.name.title(), contentStyle),
 		Paragraph(animal.breed.kind.name.title(), contentStyle),
-		Paragraph('%s kg' % (animal.weight,), contentStyle),
-		Image(path, width=2.5*mm, height=2.5*mm) if animal.is_vaccinated else Paragraph('', contentStyle),
+		Paragraph('%s kg' % (animal.weight,), contentStyle),		
 		Image(path, width=2.5*mm, height=2.5*mm) if animal.want_sterilize else Paragraph('', contentStyle),
 		Paragraph(animal.get_parish_name().title(), contentStyle),
 		Paragraph(animal.get_owner_name().title(), contentStyle),
+		Paragraph(animal.get_owner_contact().title(), contentStyle),
 
 	) for index, animal in enumerate(animals)] if len(animals) else [('Sin datos.',)]
 
