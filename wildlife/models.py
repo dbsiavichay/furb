@@ -42,7 +42,7 @@ class Animal(models.Model):
 		(parish.code, parish.name) for parish in Parish.objects.filter(canton_code='1401')
 	)
 
-	code = models.CharField(max_length=32)
+	code = models.CharField(max_length=32, unique=True)
 	name = models.CharField(max_length=128)
 	birthday = models.DateField()
 	primary_color = models.CharField(max_length=64)
@@ -57,6 +57,7 @@ class Animal(models.Model):
 	owner = models.CharField(max_length=15)
 	parish = models.CharField(max_length=6, choices = PARISH_CHOICES)
 	breed = models.ForeignKey(Breed)
+	date_joined=models.DateTimeField(auto_now_add=True)
 	
 	def age(self):
 		birthday = str(self.birthday)[:10].split('-')

@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'furbdb',
+        'NAME': 'furb',
         'USER': 'postgres',
         'PASSWORD': 'omega2009a',
         'HOST': '172.16.8.11',
