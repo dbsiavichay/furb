@@ -53,11 +53,12 @@ class Animal(models.Model):
 	is_vaccinated = models.BooleanField(default=False)
 	want_sterilize = models.BooleanField(default=False)
 	image = models.ImageField(upload_to='animals', blank=True, null=True)
+	is_dead = models.BooleanField(blank=True, default=False)
 	contraindications = models.TextField(blank=True, null=True)
 	owner = models.CharField(max_length=15)
 	parish = models.CharField(max_length=6, choices = PARISH_CHOICES)
 	breed = models.ForeignKey(Breed)
-	date_joined=models.DateTimeField(auto_now_add=True)
+	date_joined=models.DateTimeField(auto_now_add=True)	
 	
 	def age(self):
 		birthday = str(self.birthday)[:10].split('-')

@@ -9,11 +9,13 @@
 {% load staticfiles %}
 <h3><i class="fa fa-angle-right"></i> Animales</h3>
 
+{% if not object %}
 <div class="wizard">
     <a href="/animal/add/step/1/"><span class="badge">1</span> Datos del propietario</a>
     <a class="current"><span class="badge">2</span> Datos generales</a>
     <a><span class="badge">3</span> Finalizar e imprimir</a>
 </div>
+{% endif %}
 
 <div class="row mt">
   <div class="col-lg-12">
@@ -25,7 +27,7 @@
         </h4>
       </div>
       {% load widget_tweaks %}
-      <form action="" method="POST" class="row" enctype="multipart/form-data" novalidate>
+      <form id="form" action="" method="POST" class="row" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
         <input type="hidden" name="owner" value="{{ owner }}">
         <div class="col-md-6 form-group {% if form.name.errors %} has-error {% endif %}">
@@ -37,13 +39,15 @@
         </div>
         <div class="col-md-6 form-group">
           <label for="kind">Especie</label>
+          {% if object %}
+          {{ form.kind|add_class:"form-control"|attr:"disabled" }}
+          <input type="hidden" name="kind" value="{{ form.kind.value }}"/>
+          {% else %}
           {{ form.kind|add_class:"form-control" }}
+          {% endif %}
         </div>
         <div class="col-md-6 form-group {% if form.breed.errors %} has-error {% endif %}">
           <label for="id_breed">Raza</label>
-          <!-- <select id="id_breed" name="breed" class="form-control" required>
-            <option value="">---------</option>
-          </select> -->
           {{ form.breed|add_class:"form-control" }}
           {% for error in form.breed.errors %}
           <span class="help-block">{{ error }}</span>
@@ -51,7 +55,12 @@
         </div>
         <div class="col-md-6 form-group {% if form.parish.errors %} has-error {% endif %}">
           <label for="id_parish">Parroquia de residencia</label>
+          {% if object %}
+          {{ form.parish|add_class:"form-control"|attr:"disabled" }}
+          <input type="hidden" name="parish" value="{{ form.parish.value }}"/>
+          {% else %}
           {{ form.parish|add_class:"form-control" }}
+          {% endif %}
           {% for error in form.parish.errors %}
           <span class="help-block">{{ error }}</span>
           {% endfor %}
@@ -83,7 +92,12 @@
 
         <div class="col-md-6 form-group {% if form.gender.errors %} has-error {% endif %}">
           <label for="id_gender">Sexo</label>
+          {% if object %}
+          {{ form.gender|add_class:"form-control"|attr:"disabled" }}
+          <input type="hidden" name="gender" value="{{ form.gender.value }}"/>          
+          {% else %}
           {{ form.gender|add_class:"form-control" }}
+          {% endif %}
           {% for error in form.gender.errors %}
           <span class="help-block">{{ error }}</span>
           {% endfor %}
@@ -115,7 +129,14 @@
         <div class="col-md-12 form-group">
           <label for="id_image">Foto</label>
           {{ form.image|add_class:"form-control" }}
-        </div>         
+        </div> 
+
+        {% if object %}
+        <div class="col-xs-12 form-group">
+          <label for="id_is_dead">Esta fallecido?</label>
+          {{ form.is_dead|attr:"style:display:block" }}
+        </div>
+        {% endif %}       
 
         <div class="col-xs-12 form-group">
           <label for="contraindications">Contraindicaciones</label>
@@ -124,12 +145,22 @@
           <span class="help-block">{{ error }}</span>
           {% endfor %}
         </div>
-        <div class="col-xs-12">
-          <button type="submit" class="btn btn-primary">
-            <i class="fa fa-check"></i> Continuar
-          </button>          
-        </div>
       </form>
+      
+      <form id="delete" action="/animal/{{ object.id }}/delete/" method="POST">{% csrf_token %}</form>
+      <div class="row">
+        <div class="col-xs-12">
+          <button type="submit" form="form" class="btn btn-primary">
+            <i class="fa fa-check"></i> {% if not object %} Continuar {% else %} Guardar {% endif %}
+          </button>
+          {% if object %}          
+          <button type="submit" form="delete" class="btn btn-danger">
+            <i class="fa fa-close"></i> Eliminar
+          </button> 
+          {% endif %}  
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

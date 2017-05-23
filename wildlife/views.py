@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from os import listdir
 from os.path import isfile, join
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
@@ -102,9 +102,9 @@ class BreedUpdateView(UpdateView):
 class AnimalListView(PaginationMixin, ListView):
 	model = Animal
 	paginate_by = 12
-
+	
 	def get_queryset(self):
-		queryset = super(AnimalListView, self).get_queryset()
+		queryset = super(AnimalListView, self).get_queryset().filter(is_dead=False)
 		keyword = self.kwargs.get('keyword') or self.request.GET.get('keyword') or None
 
 		if keyword is not None:
@@ -157,11 +157,11 @@ class AnimalSecondStepView(CreateView):
 		if(len(ans)>0):
 			index = ''
 			strnum = ans[0].code[4:]
-			number = int(strnum)
+			number = int(strnum) +1			
 			zerodigits = 6 - len(str(number))
 			for i in range(0, zerodigits):
 				index = index + '0';
-			index = index + str(number+1);
+			index = index + str(number);
 			code+=index;
 		else:
 			code+='000001';
@@ -188,6 +188,10 @@ class AnimalThirdStepView(DetailView):
 	model = Animal	
 	success_url = '/animal/'
 	template_name = 'wildlife/animal_confirm_third_step.html'	
+
+class AnimalDeleteView(DeleteView):
+	model = Animal
+	success_url = '/animal/'
 
 
 def get_animal_report(request, pk):
