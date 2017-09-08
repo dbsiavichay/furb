@@ -15,20 +15,20 @@
 
         <div class="form-inline">
             <div class="form-group">          
-            <select class="form-control">
+            <select id="month" class="form-control">
                 <option value="">--- Mes ---</option>
                 {% for value, month in months %}
                 <option value="{{ value }}">{{ month }}</option>
                 {% endfor %}
             </select>
-            <select class="form-control">
+            <select id="year" class="form-control">
                 <option value="">--- Año ---</option>
                 {% for year in years %}
                 <option value="{{ year }}">{{ year }}</option>
                 {% endfor %}
             </select>
             </div>        
-            <button class="btn btn-danger">Generar</button>
+            <button id="btnStats" class="btn btn-danger">Generar</button>
         </div>
         <iframe class="content-panel" style="height:100%;">
 	        <p>Your browser does not support iframes.</p>
