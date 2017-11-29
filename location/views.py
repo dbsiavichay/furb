@@ -30,11 +30,13 @@ def search_charter(request, charter):
 
     return Response(response, status=status.HTTP_200_OK)
 
-def get_data_registro_civil(cedula):
-    url = 'http://webservice02.registrocivil.gob.ec:8080/WEBRegistroCivilUniversal/WSRegistroCivilConsulta?wsdl'
-    user = 'amorona1'
-    password = 'A1Cm0r$Na'
+def get_data_registro_civil(cedula):    
+    url = 'https://wsprodu.registrocivil.gob.ec/WsRegistroCivil/ConsultaCiudadano?wsdl'
+    institution = '86'
+    agency = '125'
+    user = 'gadmorona1'
+    password = 'G@ZnY3%j'
     proxy = {'http': '172.16.8.1:3128', 'https': '172.16.8.1:3128'}
     client = Client(url, proxy=proxy)
-    result = client.service.BusquedaPorCedula(cedula, user, password)
+    result = client.service.BusquedaPorNui(institution, agency, user, password, cedula)
     return result
