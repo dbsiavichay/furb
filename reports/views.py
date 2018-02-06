@@ -92,7 +92,7 @@ def get_animal_by_parish_report(parish, sterilized):
 	]
 
 	tstyle = TableStyle([
-		('LINEBELOW',(0,0),(-1,-1),0.1,colors.gray),
+		('LINEBELOW',(0,0),(-1,-1),0.1, colors.gray),
 		('TOPPADDING',(0,0),(-1,-1), 5),
 		('BOTTOMPADDING',(0,0),(-1,-1), 0),
 		('LEFTPADDING',(0,0),(-1,-1), 0),
@@ -184,7 +184,7 @@ def get_chart_by_month(month, year):
 	doc.build(report,canvasmaker=NumberedCanvas,onFirstPage=get_letterhead_page,onLaterPages=get_letterhead_page)
 	return buff.getvalue()
 
-colors = [
+colores = [
 	colors.HexColor('#7fffd4'),
 	colors.HexColor('#0000ff'),        
 	colors.HexColor('#a52a2a'),
@@ -236,8 +236,8 @@ def create_pie_chart(data, labels, legend=False):
 	pie.sideLabels = True    
 	pie.slices.strokeWidth = 0.5
 
-	for i in range (0, len(colors)):
-		pie.slices[i].fillColor = colors[i]
+	for i in range (0, len(colores)):
+		pie.slices[i].fillColor = colores[i]
 
 	if legend:
 		add_legend(d, pie, data)
